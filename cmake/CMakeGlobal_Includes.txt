@@ -1,0 +1,9 @@
+list(APPEND INCLUDES
+    "."
+    "../include"
+    "../../include"
+    "../../../include"
+)
+
+include_directories(${INCLUDES})
+include_directories(SYSTEM ${CMAKE_INSTALL_PREFIX}/include)
