@@ -24,6 +24,36 @@
 #define BFTYPES_H
 
 /* -------------------------------------------------------------------------- */
+/* Casting                                                                    */
+/* -------------------------------------------------------------------------- */
+
+#ifdef __cplusplus
+#define scast(a, b) (static_cast<a>(b))
+#else
+#define scast(a, b) ((a)(b))
+#endif
+
+#ifdef __cplusplus
+#define rcast(a, b) (reinterpret_cast<a>(b))
+#else
+#define rcast(a, b) ((a)(b))
+#endif
+
+#ifdef __cplusplus
+#define add(a, b, c) (reinterpret_cast<a>(reinterpret_cast<const char *>(b) + (c)))
+#else
+#define add(a, b, c) ((a)((const char *)(b) + (c)))
+#endif
+
+/* -------------------------------------------------------------------------- */
+/* NULL                                                                       */
+/* -------------------------------------------------------------------------- */
+
+#ifndef __cplusplus
+#define nullptr 0
+#endif
+
+/* -------------------------------------------------------------------------- */
 /* Userspace                                                                  */
 /* -------------------------------------------------------------------------- */
 
