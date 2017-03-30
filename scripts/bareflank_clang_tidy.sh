@@ -55,6 +55,14 @@ if [[ ! -f "compile_commands.json" ]]; then
 fi
 
 #
+# Ensure executable is in the PATH
+#
+if [[ ! -x "$(which run-clang-tidy-4.0.py)" ]]; then
+    echo "ERROR: run-clang-tidy-4.0.py not in PATH"
+    exit 1
+fi
+
+#
 # Cleanup
 #
 rm -Rf $OUTPUT

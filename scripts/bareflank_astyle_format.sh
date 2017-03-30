@@ -34,6 +34,11 @@ if [[ -z "${FILES// }" ]]; then
     exit 0
 fi
 
+if [[ ! -x "$(which astyle)" ]]; then
+   echo "ERROR: astyle not found in PATH"
+   exit 1
+fi
+
 astyle \
     --style=1tbs \
     --lineend=linux \

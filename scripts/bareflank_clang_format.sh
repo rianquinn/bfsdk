@@ -34,4 +34,9 @@ if [[ -z "${FILES// }" ]]; then
     exit 0
 fi
 
+if [[ ! -x "$(which clang-format-4.0)" ]]; then
+    echo "ERROR: clang-format-4.0 not found in PATH"
+    exit 1
+fi
+
 clang-format-4.0 -i $FILES
