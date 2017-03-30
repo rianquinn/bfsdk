@@ -157,6 +157,7 @@ if(NOT WIN32 STREQUAL "1")
     install(PROGRAMS scripts/bareflank_astyle_format.sh DESTINATION bin)
     install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
     install(PROGRAMS scripts/create_linker.sh DESTINATION bin)
+    install(PROGRAMS scripts/link_newlib.sh DESTINATION bin)
 
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++)

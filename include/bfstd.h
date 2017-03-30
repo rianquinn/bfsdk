@@ -104,7 +104,7 @@ forward(typename std::remove_reference<T>::type &&t) noexcept
 ///
 template<class T>
 constexpr typename std::remove_reference<T>::type &&
-move(T &&t)
+move(T &&t) noexcept
 {
     return static_cast < typename std::remove_reference<T>::type && >(t);
 }
@@ -114,7 +114,7 @@ move(T &&t)
 /// A C++ wrapper around C's abort().
 ///
 [[noreturn]] inline void
-terminate()
+terminate() noexcept
 {
     printf("FATAL ERROR: std::terminate() called!!!\n");
     abort();

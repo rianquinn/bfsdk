@@ -20,23 +20,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-if [[ "$#" == 1 ]]; then
-    cd $1
-fi
+# Newlib refuses to build a shared library unless your OS is Linux, so we
+# build the shared library ourselves here.
 
-HEADERS=$(git ls-files "*.h" | tr '\n' ' ')
-CSOURCE=$(git ls-files "*.c" | tr '\n' ' ')
-CXXSOURCE=$(git ls-files "*.cpp" | tr '\n' ' ')
-
-FILES="$HEADERS $CSOURCE $CXXSOURCE"
-
-if [[ -z "${FILES// }" ]]; then
-    exit 0
-fi
-
-if [[ ! -x "$(which clang-format-4.0)" ]]; then
-    echo "ERROR: clang-format-4.0 not found in PATH"
-    exit 1
-fi
-
-clang-format-4.0 -i $FILES
+eval $1 -shared `find $2/newlib/src/newlib-build/x86_64-vmm-elf/newlib/libc -name "*.o" | xargs echo` -o libc.so  1>/dev/null 2>/dev/null
+mv libc.so $3/lib/ 1>/dev/null 2>/dev/null

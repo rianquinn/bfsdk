@@ -84,9 +84,7 @@ NEWLIB_DEFINES="$NEWLIB_DEFINES -DCLOCK_MONOTONIC"
 # System Root
 # ------------------------------------------------------------------------------
 
-if [[ -z $SYSROOT ]]; then
-    SYSROOT="$BIN_LOCATION/../sysroots/x86_64-$SYSROOT_NAME-elf/"
-fi
+SYSROOT="$BIN_LOCATION/../sysroots/x86_64-$SYSROOT_NAME-elf"
 
 # ------------------------------------------------------------------------------
 # System Root Includes
@@ -94,19 +92,19 @@ fi
 
 SYSROOT_INC_PATH=""
 
-if [[ -d "$SYSROOT/include/" ]]; then
-    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include/"
+if [[ -d "$SYSROOT/include" ]]; then
+    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include"
 fi
 
-if [[ -z COMPILING_LIBCXX ]] && [[ -d "$SYSROOT/include/c++/v1/" ]]; then
-    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include/c++/v1/"
+if [[ -z $COMPILING_LIBCXX ]] && [[ -d "$SYSROOT/include/c++/v1" ]]; then
+    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include/c++/v1"
 fi
 
 # ------------------------------------------------------------------------------
 # System Root Libs
 # ------------------------------------------------------------------------------
 
-SYSROOT_LIB_PATH="-L$SYSROOT/lib/"
+SYSROOT_LIB_PATH="-L$SYSROOT/lib"
 
 # ------------------------------------------------------------------------------
 # Filter Arguments
