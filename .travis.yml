@@ -134,8 +134,6 @@ matrix:
   - os: linux
     env:
       - TEST="Codecov"
-    install:
-      - pip install --user git+git://github.com/eddyxu/cpp-coveralls.git
     script:
       - |
         cmake \
@@ -144,7 +142,8 @@ matrix:
       - make
       - make test
       - cd ..
-      - bash <(curl -s https://codecov.io/bash) -t 490d2512-7324-44e4-9d8f-f0a08e2993d9 -x "llvm-cov-4.0 gcov" -c
+      - bash <(curl -s https://codecov.io/bash) -t 4a2125d9-54e1-42ea-a144-0fd704a61356 -c
+
 
   #
   # Google Address Sanitizer

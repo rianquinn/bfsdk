@@ -1,3 +1,5 @@
+# cmake ..
+
 cmake_minimum_required(VERSION 3.4)
 project(bfsdk C CXX)
 
@@ -10,6 +12,22 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 include("cmake/CMakeGlobal_Project.txt")
+
+# ------------------------------------------------------------------------------
+# JSON
+# ------------------------------------------------------------------------------
+
+list(APPEND CATCH_CMAKE_ARGS
+    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+)
+
+ExternalProject_Add(
+    json
+    PREFIX ${CMAKE_BINARY_DIR}/json
+    GIT_REPOSITORY https://github.com/Bareflank/json.git
+    GIT_TAG v1.2
+    CMAKE_ARGS ${CATCH_CMAKE_ARGS}
+)
 
 # ------------------------------------------------------------------------------
 # Catch

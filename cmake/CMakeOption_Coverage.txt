@@ -1,9 +1,6 @@
 if(ENABLE_COVERAGE)
 
-    message("-- Testing Config: Coveralls")
-
-    set(CMAKE_C_COMPILER "clang-4.0")
-    set(CMAKE_CXX_COMPILER "clang++-4.0")
+    message("-- Testing Config: Coverage Tools")
 
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -g")
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -O0")
