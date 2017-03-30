@@ -332,7 +332,7 @@ if [[ -n "$SOURCE_ARGS" ]]; then
         done
     fi
 
-    $COMPILER -U__USER_LABEL_PREFIX__ -D__USER_LABEL_PREFIX__="" --target=x86_64-elf -Qunused-arguments $NEWLIB_DEFINES --sysroot=$SYSROOT $SYSROOT_INC_PATH ${COMPILE_ARGS[*]} $REQUIRED_COMPILER_ARGS ${SOURCE_ARGS[*]}
+    $COMPILER -U__USER_LABEL_PREFIX__ -D__USER_LABEL_PREFIX__="" -D__ELF__ --target=x86_64-elf -Qunused-arguments $NEWLIB_DEFINES --sysroot=$SYSROOT $SYSROOT_INC_PATH ${COMPILE_ARGS[*]} $REQUIRED_COMPILER_ARGS ${SOURCE_ARGS[*]}
 
 else
 

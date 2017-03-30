@@ -52,7 +52,7 @@ before_install:
   - export PATH="$HOME/bfprefix/bin:$PATH"
 
 #
-# Get CMake Ready
+# Build Dependencies
 #
 before_script:
   - mkdir build
