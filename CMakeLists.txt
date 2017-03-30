@@ -81,17 +81,17 @@ ExternalProject_Add(
 # Astyle
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+list(APPEND ASTYLE_CMAKE_ARGS
+    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+)
+
 ExternalProject_Add(
     astyle
     PREFIX ${CMAKE_BINARY_DIR}/astyle
     GIT_REPOSITORY https://github.com/Bareflank/astyle.git
-    UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/astyle/src/astyle/build/gcc && make
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/astyle/src/astyle/build/gcc && make install prefix=${CMAKE_INSTALL_PREFIX}
+    GIT_TAG v1.2
+    CMAKE_ARGS ${ASTYLE_CMAKE_ARGS}
 )
-endif()
 
 # ------------------------------------------------------------------------------
 # Binutils
