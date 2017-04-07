@@ -36,22 +36,6 @@ extern "C" {
 #endif
 
 /**
- * Get Thread Context CPUID
- *
- * @return returns the cpuid from the current thread context
- */
-uint64_t
-thread_context_cpuid(void);
-
-/**
- * Get Thread Context TLS Pointer
- *
- * @return returns the pointer to the TLS data for the current thread context
- */
-uint64_t
-thread_context_tlsptr(void);
-
-/**
  * @struct thread_context_t
  *
  * Thread Context
