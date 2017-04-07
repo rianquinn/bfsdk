@@ -42,6 +42,8 @@ make install
 ```
 
 #### Visual Studio 2017 (NMake)
+
+From the x64 Native Tools Command Prompt for Visual Studio:
 ```
 set PATH=C:\Program Files\Git\cmd;%PATH%
 git clone https://github.com/Bareflank/bfsdk.git
@@ -49,7 +51,7 @@ git clone https://github.com/Bareflank/bfsdk.git
 mkdir bfsdk/build
 cd bfsdk/build
 
-cmake ..
+cmake -G "NMake Makefiles" ..
 
 nmake
 nmake test
@@ -57,6 +59,8 @@ nmake install
 ```
 
 #### Visual Studio 2017 (MSBuild)
+
+From the Developer Command Prompt for Visual Studio:
 ```
 set PATH=C:\Program Files\Git\cmd;%PATH%
 git clone https://github.com/Bareflank/bfsdk.git
