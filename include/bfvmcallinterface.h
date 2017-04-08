@@ -355,6 +355,28 @@ struct vmcall_registers_t {
     uintptr_t r15;
 };
 
+/**
+ * VMCall
+ *
+ * Performs a VMCall to the hypervisor. Note that this VMCall has to touch
+ * all of the registers so its slower than using VMCall event if you only
+ * need a single index
+ *
+ * @param regs register state
+ */
+void vmcall(struct vmcall_registers_t *regs);
+
+/**
+ * VMCall Event
+ *
+ * Performs a VMCall event to the hypervisor. Note that this VMCall only
+ * touches a couple of registers so it's faster than the generic vmcall, but
+ * in return only supports r00, r01 and r02.
+ *
+ * @param regs register state
+ */
+void vmcall_event(struct vmcall_registers_t *regs);
+
 #ifdef __cplusplus
 }
 #endif

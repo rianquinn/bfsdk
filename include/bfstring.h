@@ -44,16 +44,23 @@ inline auto operator""_s(const char *str, std::size_t len)
 
 namespace bfn
 {
+
 /// Convert to String (with base)
 ///
 /// Same thing as std::to_string, but adds the ability to state the base for
 /// conversion.
 ///
+/// @expects none
+/// @ensures none
+///
 /// @param val the value to convert
 /// @param base the base for conversion.
 /// @return string version of val converted to the provided base
 ///
-template<class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+template <
+    typename T,
+    typename = std::enable_if<std::is_integral<T>::value>
+    >
 std::string
 to_string(const T val, const int base)
 {
@@ -75,6 +82,35 @@ to_string(const T val, const int base)
     stream << std::setbase(base) << std::uppercase << val;
     return stream.str();
 }
+
+/// Split String
+///
+/// Splits a string into a string vector based on a provided
+/// delimiter
+///
+/// @expects none
+/// @ensures none
+///
+/// @param str the string to split
+/// @param delimiter the delimiter to split the string with
+/// @return std::vector<std::string> version of str, split using delimiter
+///
+inline auto
+split(const std::string &str, char delimiter)
+{
+    std::istringstream ss(str);
+    std::vector<std::string> result;
+
+    while (!ss.eof()) {
+        std::string field;
+        std::getline(ss, field, delimiter);
+
+        result.push_back(field);
+    }
+
+    return result;
+}
+
 }
 
 #endif

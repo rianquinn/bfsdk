@@ -44,7 +44,7 @@ message("-- OS Type: ${OSTYPE}")
 # ABI
 # ------------------------------------------------------------------------------
 
-if(OSTYPE STREQUAL "WIN32")
+if(OSTYPE STREQUAL "WIN64")
     set(ABITYPE "MS64")
 else()
     set(ABITYPE "SYSV")

@@ -71,7 +71,7 @@ template<class T> struct remove_reference < T && > {
 ///
 /// Preserves lvalue / rvalue reference
 ///
-/// @param the object to be forwarded
+/// @param t the object to be forwarded
 /// @return static_cast<T&&>(t)
 ///
 template<class T>
@@ -85,7 +85,7 @@ forward(typename std::remove_reference<T>::type &t) noexcept
 ///
 /// Preserves lvalue / rvalue reference
 ///
-/// @param the object to be forwarded
+/// @param t the object to be forwarded
 /// @return static_cast<T&&>(t)
 ///
 template<class T>
@@ -99,7 +99,7 @@ forward(typename std::remove_reference<T>::type &&t) noexcept
 ///
 /// Produces a rvalue reference
 ///
-/// @param the object to be moved
+/// @param t the object to be moved
 /// @return static_cast<typename std::remove_reference<T>::type&&>(t)
 ///
 template<class T>

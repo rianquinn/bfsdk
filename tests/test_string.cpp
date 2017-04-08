@@ -53,3 +53,16 @@ TEST_CASE("base 8")
     CHECK(bfn::to_string(static_cast<unsigned long>(10), 8) == "012");
     CHECK(bfn::to_string(static_cast<unsigned long long>(10), 8) == "012");
 }
+
+TEST_CASE("split")
+{
+    std::vector<std::string> empty = {""};
+    std::vector<std::string> no_delimiters = {"no_delimiters"};
+    std::vector<std::string> no_strings = {"", "", ""};
+    std::vector<std::string> strings = {"the", "cow", "is", "blue"};
+
+    CHECK(bfn::split("", ';') == empty);
+    CHECK(bfn::split("no_delimiters", ';') == no_delimiters);
+    CHECK(bfn::split(";;", ';') == no_strings);
+    CHECK(bfn::split("the;cow;is;blue", ';') == strings);
+}
