@@ -22,7 +22,9 @@
 #ifndef BFNEWDELETE_H
 #define BFNEWDELETE_H
 
+#if defined(__clang__) || defined(__GNUC__)
 #pragma GCC system_header
+#endif
 
 #include <stdlib.h>
 #include <stddef.h>
