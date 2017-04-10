@@ -61,5 +61,4 @@ astyle \
     --add-brackets \
     --max-code-length=100 \
     --break-after-logical \
-    --add-one-line-brackets \
     $FILES
