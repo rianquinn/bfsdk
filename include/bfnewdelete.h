@@ -26,13 +26,17 @@
 #pragma GCC system_header
 #endif
 
-#include <stdlib.h>
-#include <stddef.h>
+#include <cstdlib>
 #include <exception>
 
 #include <bfconstants.h>
 
 size_t g_new_throws_bad_alloc = 0;
+
+#ifdef _WIN32
+#include <malloc.h>
+#define aligned_alloc _aligned_malloc
+#endif
 
 static void *
 custom_new(std::size_t size)
