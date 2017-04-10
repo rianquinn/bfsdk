@@ -30,6 +30,8 @@
 #include <stddef.h>
 #include <exception>
 
+#include <bfconstants.h>
+
 size_t g_new_throws_bad_alloc = 0;
 
 static void *

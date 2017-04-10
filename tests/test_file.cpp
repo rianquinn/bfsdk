@@ -84,70 +84,25 @@ TEST_CASE("extension")
     CHECK(f.extension("no_path.ext") == ".ext");
     CHECK(f.extension("/with/path.ext") == ".ext");
     CHECK(f.extension("more.than.one.ext") == ".ext");
-
-    // #ifdef _WIN32
-    // CHECK(f.extension(R"(c:\windows\path.ext)") == ".ext");
-    // #endif
+    CHECK(f.extension(R"(c:\windows\path.ext)") == ".ext");
 }
 
-// TEST_CASE("basename")
-// {
-//     auto &&f = file{};
+TEST_CASE("exists")
+{
+    auto &&f = file{};
+    auto &&filename = "test.txt"_s;
 
-//     CHECK(f.basename("") == "");
-//     CHECK(f.basename("no_path") == "no_path");
-//     CHECK(f.basename("with.ext") == "with.ext");
-//     CHECK(f.basename("/no_filename/") == ".");
-//     CHECK(f.basename("no_filename/") == ".");
-//     CHECK(f.basename("/no/filename/") == ".");
-//     CHECK(f.basename("/absolute/file.ext") == "file.ext");
-//     CHECK(f.basename("../relative/file.ext") == "file.ext");
-//     CHECK(f.basename("/") == "/");
+    CHECK(!f.exists(""));
+    CHECK(!f.exists(filename));
 
-//     #ifdef _WIN32
-//     CHECK(f.basename(R"(c:\windows\path.ext)") == "path.ext");
-//     CHECK(f.basename(R"(c:\windows\no_filename\)") == ".");
-//     #endif
-// }
+    CHECK_NOTHROW(f.write_text(filename, "hello world"));
+    CHECK(f.exists(filename));
 
-// TEST_CASE("dirname")
-// {
-//     auto &&f = file{};
+    auto &&ret = std::remove(filename.c_str());
+    ignored(ret);
 
-//     CHECK(f.dirname("") == "");
-//     CHECK(f.dirname("no_path") == "");
-//     CHECK(f.dirname("with.ext") == "");
-//     CHECK(f.dirname("/no_filename/") == "/no_filename");
-//     CHECK(f.dirname("no_filename/") == "no_filename");
-//     CHECK(f.dirname("/no/filename/") == "/no/filename");
-//     CHECK(f.dirname("/absolute/file.ext") == "/absolute");
-//     CHECK(f.dirname("../relative.ext") == "..");
-//     CHECK(f.dirname("../relative/file.ext") == "../relative");
-//     CHECK(f.dirname("/") == "");
-
-//     #ifdef _WIN32
-//     CHECK(f.dirname(R"(c:\windows\path.ext)") == R"(c:\windows)");
-//     CHECK(f.dirname(R"(c:\windows\no_filename\)") == R"(c:\windows\no_filename)");
-//     #endif
-// }
-
-// TEST_CASE("exists")
-// {
-//     auto &&f = file{};
-//     auto &&filename = "test.txt"_s;
-
-//     CHECK(!f.exists(""));
-//     CHECK(!f.exists(filename));
-
-//     CHECK_NOTHROW(f.write_text(filename, "hello world"));
-//     CHECK(f.exists(filename));
-
-//     auto &&ret = std::remove(filename.c_str());
-//     ignored(ret);
-
-//     CHECK(!f.exists(filename));
-// }
-
+    CHECK(!f.exists(filename));
+}
 
 // TEST_CASE("find files")
 // {

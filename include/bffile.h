@@ -49,8 +49,6 @@ public:
     using binary_data = std::vector<char>;              ///< File format for binary data
     using filename_type = std::string;                  ///< File name type
     using extension_type = std::string;                 ///< Extension name type
-    using basename_type = std::string;                  ///< Base name type
-    using dirname_type = std::string;                   ///< Directory name type
     using path_list_type = std::vector<std::string>;    ///< Find files path type
 
     /// @endcond
@@ -192,39 +190,6 @@ public:
         return {};
     }
 
-    // /// Get File Base Name
-    // ///
-    // /// @expects none
-    // /// @ensures none
-    // ///
-    // /// @param filename the file name to extract the basename
-    // /// @return the filename's basename (includes extension)
-    // ///
-    // PUBLISH basename_type
-    // basename(const filename_type &filename)
-    // {
-    //     if (filename.empty()) {
-    //         return {};
-    //     }
-
-    //     auto len = filename.length();
-    //     auto index = filename.find_last_of(R"(/\)");
-    // }
-
-    // /// Get File Directory Name
-    // ///
-    // /// @expects none
-    // /// @ensures none
-    // ///
-    // /// @param filename the file name to extract the directory
-    // /// @return the filename's directory
-    // ///
-    // PUBLISH basename_type
-    // dirname(const filename_type &filename)
-    // {
-    //     return fs::path(filename).parent_path();
-    // }
-
     /// File Exists
     ///
     /// @expects none
@@ -242,16 +207,16 @@ public:
         return false;
     }
 
-    // /// Find Files
-    // ///
-    // /// Loops through all of the provides filenames and file paths and
-    // /// returns a list of each filename combined with the path the filename
-    // /// was first found. If a filename cannot be found, an exception is
-    // /// thrown.
-    // ///
-    // /// @expects none
-    // /// @ensures ret: path_list_type.size() == filenames.size()
-    // ///
+    /// Find Files
+    ///
+    /// Loops through all of the provides filenames and file paths and
+    /// returns a list of each filename combined with the path the filename
+    /// was first found. If a filename cannot be found, an exception is
+    /// thrown.
+    ///
+    /// @expects none
+    /// @ensures ret: path_list_type.size() == filenames.size()
+    ///
     // PUBLISH path_list_type
     // find_files(const path_list_type &filenames, const path_list_type &paths)
     // {
@@ -275,7 +240,6 @@ public:
 
     //     return results;
     // }
-
 
 public:
 
