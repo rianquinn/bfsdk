@@ -61,8 +61,14 @@ TEST_CASE("split")
     std::vector<std::string> no_strings = {"", "", ""};
     std::vector<std::string> strings = {"the", "cow", "is", "blue"};
 
+    CHECK(bfn::split(nullptr, ';').empty());
     CHECK(bfn::split("", ';') == empty);
     CHECK(bfn::split("no_delimiters", ';') == no_delimiters);
     CHECK(bfn::split(";;", ';') == no_strings);
     CHECK(bfn::split("the;cow;is;blue", ';') == strings);
+
+    std::istringstream ss;
+    ss.setstate(std::ios::eofbit);
+
+    CHECK(bfn::split(std::move(ss), ';').empty());
 }

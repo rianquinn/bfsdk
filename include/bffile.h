@@ -26,6 +26,8 @@
 #ifndef BFFILE_H
 #define BFFILE_H
 
+#include <cstdlib>
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -180,7 +182,6 @@ public:
             return {};
         }
 
-        auto len = filename.length();
         auto index = filename.find_last_of('.');
 
         if (index != filename_type::npos) {
@@ -201,45 +202,83 @@ public:
     PUBLISH bool
     exists(const filename_type &filename)
     {
-        if (auto &&handle = std::ifstream(filename))
-            return true;
-
-        return false;
+        auto &&handle = std::ifstream(filename);
+        return handle.good();
     }
 
     /// Find Files
     ///
-    /// Loops through all of the provides filenames and file paths and
-    /// returns a list of each filename combined with the path the filename
-    /// was first found. If a filename cannot be found, an exception is
+    /// Loops through all of the provided files and file paths and
+    /// returns a list of each filename combined with the path and the filename
+    /// that was first found. If a filename cannot be found, an exception is
     /// thrown.
     ///
-    /// @expects none
-    /// @ensures ret: path_list_type.size() == filenames.size()
+    /// @note we use the '/' separator on both Windows and POSIX. The reason
+    ///     is both support '/' for the versions we support.
     ///
-    // PUBLISH path_list_type
-    // find_files(const path_list_type &filenames, const path_list_type &paths)
-    // {
-    //     path_list_type results;
+    /// @expects files.empty() == false
+    /// @expects paths.empty() == false
+    /// @ensures ret: path_list_type.size() == files.size()
+    ///
+    /// @param files list of files to locate in the list of provided paths
+    /// @param paths list of paths to search for the provided list of files
+    /// @return pull paths for each file located, throws otherwise
+    ///
+    PUBLISH path_list_type
+    find_files(const path_list_type &files, const path_list_type &paths)
+    {
+        expects(!files.empty());
+        expects(!paths.empty());
 
-    //     for (const auto &filename : filenames) {
-    //         auto found = false;
+        path_list_type results;
 
-    //         for (const auto &path : paths) {
-    //             auto fullpath = path + SEPARATOR + filename;
+        for (const auto &filename : files) {
+            auto found = false;
 
-    //             if (exists(fullpath)) {
-    //                 results.push_back(fullpath);
-    //                 found = true;
-    //             }
-    //         }
+            for (auto path : paths) {
+                path += '/';
+                path += filename;
 
-    //         if (!found)
-    //             throw std::runtime_error("unable to locate file: " + filename);
-    //     }
+                if (exists(path)) {
+                    results.push_back(path);
 
-    //     return results;
-    // }
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                throw std::runtime_error("unable to locate file: " + filename);
+            }
+        }
+
+        return results;
+    }
+
+    /// Get Home Directory
+    ///
+    /// @expects none
+    /// @expects none
+    ///
+    /// @return returns home directory
+    ///
+    PUBLISH std::string
+    home()
+    {
+        char *home;
+
+        home = std::getenv("HOME");
+        if (home != nullptr) {
+            return {home};
+        }
+
+        home = std::getenv("HOMEPATH");
+        if (home != nullptr) {
+            return {home};
+        }
+
+        throw std::runtime_error("HOME or HOMEPATH not set");
+    }
 
 public:
 
