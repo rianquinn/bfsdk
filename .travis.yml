@@ -50,6 +50,7 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
   - export PATH="$HOME/bfprefix/bin:$PATH"
+  - export ENABLE_UNITTESTING=yes
 
 #
 # Build Dependencies
@@ -142,8 +143,21 @@ matrix:
       - make
       - make test
       - cd ..
-      - bash <(curl -s https://codecov.io/bash) -t 4a2125d9-54e1-42ea-a144-0fd704a61356 -c
+      - bash <(curl -s https://codecov.io/bash)
 
+  #
+  # LLVM SanitizerCoverage
+  #
+  - os: linux
+    env:
+      - TEST="LLVM SanitizerCoverage"
+    script:
+      - |
+        cmake \
+          -DENABLE_COVERAGE_LLVM=ON \
+          ..
+      - make install
+      - bareflank_llvm_cov.sh
 
   #
   # Google Address Sanitizer

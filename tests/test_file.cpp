@@ -24,6 +24,9 @@
 
 #include <bffile.h>
 #include <bfstring.h>
+#include <hippomocks.h>
+
+#include <memory>
 
 TEST_CASE("read with bad filename")
 {
@@ -63,14 +66,13 @@ TEST_CASE("read / write success")
     auto &&text_data = "hello"_s;
     auto &&binary_data = {'h', 'e', 'l', 'l', 'o'};
 
-    CHECK_NOTHROW(f.write_text(filename, text_data));
+    REQUIRE_NOTHROW(f.write_text(filename, text_data));
     CHECK(f.read_text(filename) == text_data);
 
-    CHECK_NOTHROW(f.write_binary(filename, binary_data));
+    REQUIRE_NOTHROW(f.write_binary(filename, binary_data));
     CHECK(f.read_binary(filename) == file::binary_data(binary_data));
 
-    auto &&ret = std::remove(filename.c_str());
-    ignored(ret);
+    REQUIRE(std::remove(filename.c_str()) == 0);
 }
 
 TEST_CASE("extension")
@@ -95,30 +97,70 @@ TEST_CASE("exists")
     CHECK(!f.exists(""));
     CHECK(!f.exists(filename));
 
-    CHECK_NOTHROW(f.write_text(filename, "hello world"));
+    REQUIRE_NOTHROW(f.write_text(filename, "hello world"));
     CHECK(f.exists(filename));
 
-    auto &&ret = std::remove(filename.c_str());
-    ignored(ret);
+    REQUIRE(std::remove(filename.c_str()) == 0);
 
     CHECK(!f.exists(filename));
 }
 
-// TEST_CASE("find files")
-// {
-//     auto &&f = file{};
-//     auto &&files = {"test1.txt", "test2.txt"};
-//     auto &&paths = {"../bad/path", ".."};
+TEST_CASE("find files")
+{
+    auto &&f = file{};
+    auto &&files = {"test1.txt"_s, "test2.txt"_s};
+    auto &&paths = {"../bad/path"_s, "."_s};
 
-//     CHECK_NOTHROW(f.write_text(filename, "hello world"));
+    CHECK_THROWS(f.find_files({}, paths));
+    CHECK_THROWS(f.find_files(files, {}));
 
-//     CHECK(!f.exists(""));
-//     CHECK(!f.exists(filename));
+    CHECK_THROWS(f.find_files(files, {"../file_not_found"_s}));
 
-//     CHECK(f.exists(filename));
+    for (const auto &file : files) {
+        REQUIRE_NOTHROW(f.write_text(file, "hello world"));
+    }
 
-//     auto &&ret = std::remove(filename.c_str());
-//     ignored(ret);
+    auto &&results = f.find_files(files, paths);
 
-//     CHECK(!f.exists(filename));
-// }
+    REQUIRE(results.size() == files.size());
+    CHECK(results.at(0) == "./test1.txt");
+    CHECK(results.at(1) == "./test2.txt");
+
+    for (const auto &file : files) {
+        REQUIRE(std::remove(file.c_str()) == 0);
+    }
+}
+
+#ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT
+
+TEST_CASE("home")
+{
+    auto &&f = file{};
+    auto &&home = std::make_unique<char[]>(256);
+    auto &&homepath = std::make_unique<char[]>(256);
+
+    std::strncpy(home.get(), "home", 256);
+    std::strncpy(homepath.get(), "homepath", 256);
+
+    MockRepository mocks;
+
+    mocks.OnCallFunc(std::getenv).Do([&](auto var) {
+        if (std::string(var) == "HOME") {
+            return static_cast<char *>(nullptr);
+        }
+        return homepath.get();
+    });
+    CHECK(f.home() == "homepath");
+
+    mocks.OnCallFunc(std::getenv).Do([&](auto) {
+        return home.get();
+    });
+    CHECK(f.home() == "home");
+
+    mocks.OnCallFunc(std::getenv).Do([&](auto) {
+        return static_cast<char *>(nullptr);
+    });
+    CHECK_THROWS(f.home());
+}
+
+#endif
