@@ -24,7 +24,7 @@
 # Setup
 # ------------------------------------------------------------------------------
 
-rm -Rf $PWD/tests/*.profraw
+find . -name "*.profraw" -type f -delete
 
 declare -A region_stats
 declare -A function_stats
@@ -61,19 +61,19 @@ collect_test_stats() {
         lines=$(awk '{print $13}' <<< $line)
 
         if [[ ! ${region_stats[$filename]+exists} ]]; then
-             region_stats[$filename]="incomplete"
+            region_stats[$filename]="incomplete"
         fi
 
         if [[ ! ${function_stats[$filename]+exists} ]]; then
-             function_stats[$filename]="incomplete"
+            function_stats[$filename]="incomplete"
         fi
 
         if [[ ! ${instantiation_stats[$filename]+exists} ]]; then
-             instantiation_stats[$filename]="incomplete"
+            instantiation_stats[$filename]="incomplete"
         fi
 
         if [[ ! ${line_stats[$filename]+exists} ]]; then
-             line_stats[$filename]="incomplete"
+            line_stats[$filename]="incomplete"
         fi
 
         if [[ $regions == "100.00%" ]]; then
@@ -101,7 +101,7 @@ collect_test_stats() {
 
 if [[ "$#" == 0 ]]; then
 
-    for f in tests/test_*; do
+    for f in $(find . -path "*/test/test_*"); do
         run_test $f
         collect_test_stats $f
     done
