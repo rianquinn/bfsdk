@@ -146,6 +146,20 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
 
   #
+  # LLVM SanitizerCoverage
+  #
+  - os: linux
+    env:
+      - TEST="LLVM SanitizerCoverage"
+    script:
+      - |
+        cmake \
+          -DENABLE_COVERAGE_LLVM=ON \
+          ..
+      - make install
+      - bareflank_llvm_cov.sh
+
+  #
   # Google Address Sanitizer
   #
   - os: linux

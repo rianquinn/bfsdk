@@ -96,8 +96,9 @@ to_string(const T val, const int base)
 /// @return std::vector<std::string> version of str, split using delimiter
 ///
 inline std::vector<std::string>
-split(std::istringstream ss, char delimiter)
+split(const std::string &str, char delimiter)
 {
+    std::istringstream ss{str};
     std::vector<std::string> result;
 
     while (!ss.eof()) {
@@ -108,25 +109,6 @@ split(std::istringstream ss, char delimiter)
     }
 
     return result;
-}
-
-/// Split String
-///
-/// Splits a string into a string vector based on a provided
-/// delimiter
-///
-/// @expects none
-/// @ensures none
-///
-/// @param str the string to split
-/// @param delimiter the delimiter to split the string with
-/// @return std::vector<std::string> version of str, split using delimiter
-///
-inline std::vector<std::string>
-split(const std::string &str, char delimiter)
-{
-    std::istringstream ss{str};
-    return split(std::move(ss), delimiter);
 }
 
 /// Split String

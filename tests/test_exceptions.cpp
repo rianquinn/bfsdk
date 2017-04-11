@@ -24,21 +24,55 @@
 
 #include <bfexception.h>
 
+enum class test_case {
+    throw_logic_error,
+    throw_bad_alloc,
+    throw_int,
+    no_throw
+};
+
+test_case g_test = test_case::no_throw;
+
+void test()
+{
+    switch (g_test) {
+        case test_case::throw_logic_error:
+            throw std::logic_error("error");
+        case test_case::throw_bad_alloc:
+            throw std::bad_alloc();
+        case test_case::throw_int:
+            throw 10;
+        default:
+            break;
+    }
+}
+
 TEST_CASE("no return")
 {
-    CHECK_NOTHROW(guard_exceptions([] { throw std::logic_error("error"); }));
-    CHECK_NOTHROW(guard_exceptions([] { throw std::bad_alloc(); }));
-    CHECK_NOTHROW(guard_exceptions([] { throw 10; }));
+    g_test = test_case::throw_logic_error;
+    CHECK_NOTHROW(guard_exceptions(test));
+
+    g_test = test_case::throw_bad_alloc;
+    CHECK_NOTHROW(guard_exceptions(test));
+
+    g_test = test_case::throw_int;
+    CHECK_NOTHROW(guard_exceptions(test));
+
+    g_test = test_case::no_throw;
+    CHECK_NOTHROW(guard_exceptions(test));
 }
 
 TEST_CASE("with return")
 {
-    CHECK(guard_exceptions(10L, [] { throw std::logic_error("error"); }) == 10L);
-    CHECK(guard_exceptions(10L, [] { throw std::bad_alloc(); }) == BF_BAD_ALLOC);
-    CHECK(guard_exceptions(10L, [] { throw 10; }) == 10L);
-}
+    g_test = test_case::throw_logic_error;
+    CHECK(guard_exceptions(10L, test) == 10L);
 
-TEST_CASE("no throw")
-{
-    CHECK(guard_exceptions(10L, [] { std::cout << "good\n"; }) == SUCCESS);
+    g_test = test_case::throw_bad_alloc;
+    CHECK(guard_exceptions(10L, test) == BF_BAD_ALLOC);
+
+    g_test = test_case::throw_int;
+    CHECK(guard_exceptions(10L, test) == 10L);
+
+    g_test = test_case::no_throw;
+    CHECK(guard_exceptions(10L, test) == SUCCESS);
 }

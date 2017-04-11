@@ -24,6 +24,11 @@
 
 #include <bfstring.h>
 
+TEST_CASE("string operator")
+{
+    CHECK("10"_s == std::string("10"));
+}
+
 TEST_CASE("base 10")
 {
     CHECK(bfn::to_string(static_cast<int>(10), 10) == "10");
@@ -66,9 +71,4 @@ TEST_CASE("split")
     CHECK(bfn::split("no_delimiters", ';') == no_delimiters);
     CHECK(bfn::split(";;", ';') == no_strings);
     CHECK(bfn::split("the;cow;is;blue", ';') == strings);
-
-    std::istringstream ss;
-    ss.setstate(std::ios::eofbit);
-
-    CHECK(bfn::split(std::move(ss), ';').empty());
 }
