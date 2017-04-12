@@ -18,10 +18,27 @@ installed prior to compiling any other repo.
 Although Bareflank can be made to run on most systems, the following are the
 supported platforms and their dependencies:
 
-#### Ubuntu 16.10:
+#### Ubuntu 16.10 (or Higher):
 ```
 sudo apt-get install build-essential linux-headers-$(uname -r) nasm cmake clang
 ```
+
+#### Windows (Cygwin):
+```
+setup-x86_64.exe -q -P git,make,gcc-core,gcc-g++,nasm,clang,clang++,cmake,wget
+```
+
+#### Windows (Visual Studio):
+
+Install the following packages:
+- [Visual Studio SDK 10](https://go.microsoft.com/fwlink/?linkid=838916)
+- [Visual Stidio WDK 10](https://go.microsoft.com/fwlink/p/?LinkId=526733)
+- [Visual Studio 2017](https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=15#)
+  - Check "Desktop development with C++"
+  - Check "C++ CLI / Support"
+  - Check "Standard Library Modules"
+- [CMake v3.8 rc3 or higher](https://cmake.org/files/v3.8/cmake-3.8.0-rc3-win64-x64.msi)
+- [Git](https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.1/Git-2.12.2-64-bit.exe)
 
 ## Compilation / Installation
 
@@ -45,7 +62,6 @@ make install
 
 From the x64 Native Tools Command Prompt for Visual Studio:
 ```
-set PATH=C:\Program Files\Git\cmd;%PATH%
 git clone https://github.com/Bareflank/bfsdk.git
 
 mkdir bfsdk/build
@@ -62,7 +78,6 @@ nmake install
 
 From the Developer Command Prompt for Visual Studio:
 ```
-set PATH=C:\Program Files\Git\cmd;%PATH%
 git clone https://github.com/Bareflank/bfsdk.git
 
 mkdir bfsdk/build
@@ -75,7 +90,7 @@ ctest
 cmake --build . --target install
 ```
 
-## Notes
+## Prefix Notes (Optional)
 
 Once built and installed, the SDK will create the Bareflank "prefix" which is a
 working directory where dependencies and various different scripts are
@@ -97,6 +112,15 @@ repos):
 ```
 cmake -DCMAKE_INSTALL_PREFIX=path ..
 ```
+## Path Notes (Optional)
+
+Various applications will be installed into the Bareflank prefix which will be
+needed for both development, and regular use. Although this step is optional,
+it is highly recommended to add the prefix's bin directory to your path.
+
+Note that on Linux, if your using sudo, you might have to add the prefix path
+to your /etc/sudoers file in order to execute Bareflank applications and
+scripts using sudo.
 
 ## License
 
