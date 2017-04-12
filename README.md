@@ -38,9 +38,9 @@ Install the following packages:
   - Check "C++ CLI / Support"
   - Check "Standard Library Modules"
 - [CMake v3.8 rc3 or higher](https://cmake.org/files/v3.8/cmake-3.8.0-rc3-win64-x64.msi)
-- [Git](https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.1/Git-2.12.2-64-bit.exe)
+- [Git for Windows](https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.1/Git-2.12.2-64-bit.exe)
 
-## Compilation / Installation
+## Compilation / Testing / Installation
 
 To compile and install the Bareflank SDK, use the following instructions:
 
