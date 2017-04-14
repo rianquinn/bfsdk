@@ -19,18 +19,5 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
-
-#include <bfupperlower.h>
-
-TEST_CASE("upper")
-{
-    CHECK(bfn::upper(0xABCDEF0123456789UL) == 0xABCDEF0123456000UL);
-    CHECK(bfn::upper(0xABCDEF0123456789UL, 12) == 0xABCDEF0123456000UL);
-}
-
-TEST_CASE("lower")
-{
-    CHECK(bfn::lower(0xABCDEF0123456789UL) == 0x0000000000000789UL);
-    CHECK(bfn::lower(0xABCDEF0123456789UL, 12) == 0x0000000000000789UL);
-}
