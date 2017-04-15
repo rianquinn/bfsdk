@@ -59,6 +59,5 @@ astyle \
     --indent=spaces=4 \
     --close-templates \
     --add-brackets \
-    --max-code-length=100 \
     --break-after-logical \
     $FILES
