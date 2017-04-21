@@ -24,7 +24,7 @@
 #define BFTYPES_H
 
 /* -------------------------------------------------------------------------- */
-/* Casting                                                                    */
+/* Helper Macros                                                              */
 /* -------------------------------------------------------------------------- */
 
 #ifdef __cplusplus
@@ -40,10 +40,18 @@
 #endif
 
 #ifdef __cplusplus
-#define add(a, b, c) (reinterpret_cast<a>(reinterpret_cast<const char *>(b) + (c)))
+#define add(a, b, c) (reinterpret_cast<a>(reinterpret_cast<char *>(b) + (c)))
 #else
-#define add(a, b, c) ((a)((const char *)(b) + (c)))
+#define add(a, b, c) ((a)((char *)(b) + (c)))
 #endif
+
+#ifdef __cplusplus
+#define cadd(a, b, c) (reinterpret_cast<a>(reinterpret_cast<const char *>(b) + (c)))
+#else
+#define cadd(a, b, c) ((a)((const char *)(b) + (c)))
+#endif
+
+#define ignored(a) (void)a
 
 /* -------------------------------------------------------------------------- */
 /* NULL                                                                       */

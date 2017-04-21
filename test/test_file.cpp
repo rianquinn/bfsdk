@@ -50,9 +50,6 @@ TEST_CASE("write with bad filename")
     CHECK_THROWS(f.write_text("", text_data));
     CHECK_THROWS(f.write_binary("", binary_data));
 
-    CHECK_THROWS(f.write_text(filename, ""));
-    CHECK_THROWS(f.write_binary(filename, {}));
-
     CHECK_THROWS(f.write_text(filename, text_data));
     CHECK_THROWS(f.write_binary(filename, binary_data));
 }
@@ -62,14 +59,22 @@ TEST_CASE("read / write success")
     auto &&f = file{};
     auto &&filename = "test.txt"_s;
 
-    auto &&text_data = "hello"_s;
-    auto &&binary_data = {'h', 'e', 'l', 'l', 'o'};
+    auto &&text_data1 = file::text_data{};
+    auto &&text_data2 = "hello"_s;
+    auto &&binary_data1 = file::binary_data{};
+    auto &&binary_data2 = {'h', 'e', 'l', 'l', 'o'};
 
-    REQUIRE_NOTHROW(f.write_text(filename, text_data));
-    CHECK(f.read_text(filename) == text_data);
+    REQUIRE_NOTHROW(f.write_text(filename, text_data1));
+    CHECK(f.read_text(filename) == text_data1);
 
-    REQUIRE_NOTHROW(f.write_binary(filename, binary_data));
-    CHECK(f.read_binary(filename) == file::binary_data(binary_data));
+    REQUIRE_NOTHROW(f.write_binary(filename, binary_data1));
+    CHECK(f.read_binary(filename) == binary_data1);
+
+    REQUIRE_NOTHROW(f.write_text(filename, text_data2));
+    CHECK(f.read_text(filename) == text_data2);
+
+    REQUIRE_NOTHROW(f.write_binary(filename, binary_data2));
+    CHECK(f.read_binary(filename) == file::binary_data(binary_data2));
 
     REQUIRE(std::remove(filename.c_str()) == 0);
 }
@@ -128,6 +133,26 @@ TEST_CASE("find files")
     for (const auto &file : files) {
         REQUIRE(std::remove(file.c_str()) == 0);
     }
+}
+
+TEST_CASE("file size")
+{
+    auto &&f = file{};
+    auto &&filename = "test.txt"_s;
+
+    auto &&text_data = "hello"_s;
+    auto &&binary_data = {'h', 'e', 'l', 'l', 'o'};
+
+    CHECK_THROWS(f.size(""));
+    CHECK_THROWS(f.size("bad_filename"));
+
+    REQUIRE_NOTHROW(f.write_text(filename, text_data));
+    CHECK(f.size(filename) == 5);
+
+    REQUIRE_NOTHROW(f.write_binary(filename, binary_data));
+    CHECK(f.size(filename) == 5);
+
+    REQUIRE(std::remove(filename.c_str()) == 0);
 }
 
 #ifdef _HIPPOMOCKS__ENABLE_CFUNC_MOCKING_SUPPORT

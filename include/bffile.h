@@ -52,8 +52,7 @@ public:
     using filename_type = std::string;                  ///< File name type
     using extension_type = std::string;                 ///< Extension name type
     using path_list_type = std::vector<std::string>;    ///< Find files path type
-
-    /// @endcond
+    using filesize_type = std::size_t;                  ///< File size type
 
     /// File Constructor
     ///
@@ -81,14 +80,30 @@ public:
     /// @param filename name of the file to read.
     /// @return the contents of filename
     ///
+    /// optimization notes:
+    /// - http://insanecoding.blogspot.it/2011/11/how-to-read-in-file-in-c.html
+    /// - since std::string has to initialize the backing array, reading in
+    ///   a binary will always be faster. Thus, use read_binary if possible
+    ///
     PUBLISH text_data
     read_text(const filename_type &filename) const
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::in)) {
-            return text_data(std::istreambuf_iterator<char>(handle),
-                             std::istreambuf_iterator<char>());
+        if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
+
+            handle.seekg(0, std::ios::end);
+            auto &&size = handle.tellg();
+
+            if (size <= 0) {
+                return text_data{};
+            }
+
+            handle.seekg(0, std::ios::beg);
+            auto &&data = text_data(static_cast<binary_data::size_type>(size), 0);
+
+            handle.read(&data.front(), size);
+            return std::move(data);
         }
 
         throw std::runtime_error("invalid filename: " + filename);
@@ -104,14 +119,28 @@ public:
     /// @param filename name of the file to read.
     /// @return the contents of filename
     ///
+    /// optimization notes:
+    /// - http://insanecoding.blogspot.it/2011/11/how-to-read-in-file-in-c.html
+    ///
     PUBLISH binary_data
     read_binary(const filename_type &filename) const
     {
         expects(!filename.empty());
 
         if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
-            return binary_data(std::istreambuf_iterator<char>(handle),
-                               std::istreambuf_iterator<char>());
+
+            handle.seekg(0, std::ios::end);
+            auto &&size = handle.tellg();
+
+            if (size <= 0) {
+                return binary_data{};
+            }
+
+            handle.seekg(0, std::ios::beg);
+            auto &&data = binary_data(static_cast<binary_data::size_type>(size));
+
+            handle.read(&data.front(), size);
+            return std::move(data);
         }
 
         throw std::runtime_error("invalid filename: " + filename);
@@ -132,7 +161,6 @@ public:
     write_text(const filename_type &filename, const text_data &data) const
     {
         expects(!filename.empty());
-        expects(!data.empty());
 
         if (auto && handle = std::fstream(filename, std::ios_base::out | std::ios_base::binary)) {
             std::copy(data.begin(), data.end(), std::ostreambuf_iterator<char>(handle));
@@ -157,7 +185,6 @@ public:
     write_binary(const filename_type &filename, const binary_data &data) const
     {
         expects(!filename.empty());
-        expects(!data.empty());
 
         if (auto && handle = std::fstream(filename, std::ios_base::out | std::ios_base::binary)) {
             std::copy(data.begin(), data.end(), std::ostreambuf_iterator<char>(handle));
@@ -176,7 +203,7 @@ public:
     /// @return the filename's extension
     ///
     PUBLISH extension_type
-    extension(const filename_type &filename)
+    extension(const filename_type &filename) const
     {
         if (filename.empty()) {
             return {};
@@ -200,10 +227,31 @@ public:
     /// @return true if the file exists, false otherwise
     ///
     PUBLISH bool
-    exists(const filename_type &filename)
+    exists(const filename_type &filename) const
     {
         auto &&handle = std::ifstream(filename);
         return handle.good();
+    }
+
+    /// File Size
+    ///
+    /// @expects filename.empty() == false
+    /// @ensures none
+    ///
+    /// @param filename to get the size of
+    /// @return size of filename
+    ///
+    PUBLISH filesize_type
+    size(const filename_type &filename) const
+    {
+        expects(!filename.empty());
+
+        if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
+            handle.seekg(0, std::ios::end);
+            return static_cast<filesize_type>(handle.tellg());
+        }
+
+        throw std::runtime_error("invalid filename: " + filename);
     }
 
     /// Find Files
@@ -225,7 +273,7 @@ public:
     /// @return pull paths for each file located, throws otherwise
     ///
     PUBLISH path_list_type
-    find_files(const path_list_type &files, const path_list_type &paths)
+    find_files(const path_list_type &files, const path_list_type &paths) const
     {
         expects(!files.empty());
         expects(!paths.empty());
@@ -263,7 +311,7 @@ public:
     /// @return returns home directory
     ///
     PUBLISH std::string
-    home()
+    home() const
     {
         char *home;
 

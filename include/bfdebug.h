@@ -182,6 +182,28 @@ output_to_vcpu(V vcpuid, T func)
 #define bffatal std::cerr << bfcolor_error << "FATAL ERROR" << bfcolor_end << ": "
 #endif
 
+/**
+ * This macro is a shortcut for printing the current file and line
+ *
+ * @code
+ * bfline;
+ * @endcode
+ */
+#define bfline bfdebug << bfcolor_blue << __FUNC__<< " ["                                          \
+                       << bfcolor_yellow << __LINE__                                               \
+                       << bfcolor_blue "]" << bfcolor_end << bfendl;
+
+/**
+ * This macro prints the value of field
+ *
+ * @code
+ * int num = 10;
+ * bffield(num)   // 10
+ * @endcode
+ */
+#define bffield(a) bfdebug << bfcolor_blue << #a << ": "                                           \
+                           << bfcolor_magenta << (a) << bfcolor_end << bfendl;
+
 #endif
 
 /**
