@@ -90,6 +90,7 @@
 #define BFELF_ERROR_MISMATCH ec_sign(0x8000000000B00000)
 #define BFELF_ERROR_UNSUPPORTED_RELA ec_sign(0x8000000000C00000)
 #define BFELF_ERROR_OUT_OF_ORDER ec_sign(0x8000000000D00000)
+#define BFELF_ERROR_OUT_OF_MEMORY ec_sign(0x8000000000E00000)
 
 /* -------------------------------------------------------------------------- */
 /* Memory Manager Error Codes                                                 */
@@ -164,6 +165,7 @@ ec_to_str(int64_t value)
         case BFELF_ERROR_MISMATCH: return "BFELF_ERROR_MISMATCH";
         case BFELF_ERROR_UNSUPPORTED_RELA: return "BFELF_ERROR_UNSUPPORTED_RELA";
         case BFELF_ERROR_OUT_OF_ORDER: return "BFELF_ERROR_OUT_OF_ORDER";
+        case BFELF_ERROR_OUT_OF_MEMORY: return "BFELF_ERROR_OUT_OF_MEMORY";
         case BF_ERROR_INVALID_ARG: return "BF_ERROR_INVALID_ARG";
         case BF_ERROR_INVALID_INDEX: return "BF_ERROR_INVALID_INDEX";
         case BF_ERROR_NO_MODULES_ADDED: return "BF_ERROR_NO_MODULES_ADDED";

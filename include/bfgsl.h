@@ -30,13 +30,6 @@
 #pragma GCC system_header
 #endif
 
-/// Ignore Parameter / Result
-///
-/// This macro can be used to intentionally ignore a function's parameter or
-/// the result of calling a function.
-///
-#define ignored(a) (void)a
-
 /// @cond
 
 #define concat1(a,b) a ## b

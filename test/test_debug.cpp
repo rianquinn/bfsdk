@@ -121,3 +121,9 @@ TEST_CASE("bffatal")
         bffatal << "hello\n";
     });
 }
+
+TEST_CASE("debug facilities")
+{
+    bfline;
+    bffield(10);
+}
