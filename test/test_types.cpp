@@ -20,16 +20,32 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-#include <bfupperlower.h>
+#include <bftypes.h>
 
-TEST_CASE("upper")
+TEST_CASE("bfscast")
 {
-    CHECK(bfn::upper(0xABCDEF0123456789UL) == 0xABCDEF0123456000UL);
-    CHECK(bfn::upper(0xABCDEF0123456789UL, 12) == 0xABCDEF0123456000UL);
+    CHECK(bfscast(unsigned, 42) == 42U);
 }
 
-TEST_CASE("lower")
+TEST_CASE("bfrcast")
 {
-    CHECK(bfn::lower(0xABCDEF0123456789UL) == 0x0000000000000789UL);
-    CHECK(bfn::lower(0xABCDEF0123456789UL, 12) == 0x0000000000000789UL);
+    CHECK(bfrcast(void *, 0) == nullptr);
+}
+
+TEST_CASE("bfadd")
+{
+    std::vector<int> buf(10);
+    CHECK(bfadd(int *, buf.data(), sizeof(int)) == &buf.at(1));
+}
+
+TEST_CASE("bfcadd")
+{
+    std::vector<int> buf(10);
+    CHECK(bfcadd(const int *, buf.data(), sizeof(int)) == &buf.at(1));
+}
+
+TEST_CASE("bfignored")
+{
+    auto i = 42;
+    bfignored(i);
 }

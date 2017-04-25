@@ -63,9 +63,9 @@
  * macro redefines how this is done.
  */
 #ifdef UNIX
-#define __FUNC__ static_cast<const char *>(__PRETTY_FUNCTION__)
+#define __BFFUNC__ static_cast<const char *>(__PRETTY_FUNCTION__)
 #else
-#define __FUNC__ static_cast<const char *>(__FUNCTION__)
+#define __BFFUNC__ static_cast<const char *>(__FUNCTION__)
 #endif
 
 #ifdef _MSC_VER
@@ -189,7 +189,7 @@ output_to_vcpu(V vcpuid, T func)
  * bfline;
  * @endcode
  */
-#define bfline bfdebug << bfcolor_blue << __FUNC__<< " ["                                          \
+#define bfline bfdebug << bfcolor_blue << __BFFUNC__<< " ["                                        \
                        << bfcolor_yellow << __LINE__                                               \
                        << bfcolor_blue "]" << bfcolor_end << bfendl;
 
@@ -207,14 +207,14 @@ output_to_vcpu(V vcpuid, T func)
 #endif
 
 /**
- * \def DEBUG
+ * \def BFDEBUG
  *
  * This macro is a shortcut for printf that adds some text.
  * Use like printf
  */
 
 /**
- * \def ALERT
+ * \def BFALERT
  *
  * This macro is a shortcut for printf that adds some text.
  * Use like printf
@@ -230,8 +230,8 @@ output_to_vcpu(V vcpuid, T func)
 #else
 #include <stdio.h>
 #endif
-#define DEBUG(...) printf("[BAREFLANK DEBUG]: " __VA_ARGS__)
-#define ALERT(...) printf("[BAREFLANK ERROR]: " __VA_ARGS__)
+#define BFDEBUG(...) printf("[BAREFLANK DEBUG]: " __VA_ARGS__)
+#define BFALERT(...) printf("[BAREFLANK ERROR]: " __VA_ARGS__)
 #endif
 
 /* -------------------------------------------------------------------------- */
@@ -241,8 +241,8 @@ output_to_vcpu(V vcpuid, T func)
 #ifdef KERNEL
 #if defined(__linux__)
 #include <linux/module.h>
-#define DEBUG(...) printk(KERN_INFO "[BAREFLANK DEBUG]: " __VA_ARGS__)
-#define ALERT(...) printk(KERN_ALERT "[BAREFLANK ERROR]: " __VA_ARGS__)
+#define BFDEBUG(...) printk(KERN_INFO "[BAREFLANK DEBUG]: " __VA_ARGS__)
+#define BFALERT(...) printk(KERN_ALERT "[BAREFLANK ERROR]: " __VA_ARGS__)
 #endif
 #endif
 
@@ -253,9 +253,9 @@ output_to_vcpu(V vcpuid, T func)
 #ifdef KERNEL
 #ifdef _WIN32
 #include <wdm.h>
-#define DEBUG(...)                                                                                 \
+#define BFDEBUG(...)                                                                               \
     DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL, "[BAREFLANK DEBUG]: " __VA_ARGS__)
-#define ALERT(...)                                                                                 \
+#define BFALERT(...)                                                                               \
     DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "[BAREFLANK ERROR]: " __VA_ARGS__)
 #endif
 #endif

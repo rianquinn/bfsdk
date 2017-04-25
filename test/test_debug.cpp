@@ -47,9 +47,9 @@ CHECK_COUT(const std::string &out, const std::string &err, T func)
     func();
 }
 
-TEST_CASE("__FUNC__")
+TEST_CASE("__BFFUNC__")
 {
-    bfdebug << __FUNC__ << '\n';
+    bfdebug << __BFFUNC__ << '\n';
 }
 
 TEST_CASE("view_as_pointer: integer")

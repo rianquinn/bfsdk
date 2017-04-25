@@ -31,9 +31,8 @@ build_script:
   #
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build"'
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; cmake .."'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make"'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make test"'
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make install"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make test"'
 
   #
   # Visual Studio (MSBuild)
