@@ -34,7 +34,7 @@ trap cleanup EXIT
 
 echo "Downloading... please wait!!!"
 cd $TMP
-wget -nv -O binutils.tar.gz http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz
+wget -nv -O binutils.tar.gz http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz 1>/dev/null 2>/dev/null
 
 echo "Extracting... please wait!!!"
 tar xf binutils.tar.gz -C $SRC --strip-components=1
@@ -46,5 +46,3 @@ make -j2 1>/dev/null 2>/dev/null
 
 echo "Installing... please wait!!!"
 make -j2 install 1>/dev/null 2>/dev/null
-
-echo "Done"

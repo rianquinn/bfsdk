@@ -20,7 +20,7 @@ supported platforms and their dependencies:
 
 #### Ubuntu 16.10 (or Higher):
 ```
-sudo apt-get install build-essential linux-headers-$(uname -r) nasm cmake clang
+sudo apt-get install git build-essential linux-headers-$(uname -r) nasm clang cmake
 ```
 
 #### Windows (Cygwin):
@@ -53,9 +53,8 @@ cd bfsdk/build
 
 cmake ..
 
-make
-make test
 make install
+make test
 ```
 
 #### Visual Studio 2017 (NMake)
@@ -69,9 +68,8 @@ cd bfsdk/build
 
 cmake -G "NMake Makefiles" ..
 
-nmake
-nmake test
 nmake install
+nmake test
 ```
 
 #### Visual Studio 2017 (MSBuild)
@@ -86,8 +84,8 @@ cd bfsdk/build
 cmake -G "Visual Studio 15 2017 Win64" ..
 
 msbuild bfsdk.sln
-ctest
 cmake --build . --target install
+ctest
 ```
 
 ## Prefix Notes (Optional)
@@ -118,9 +116,34 @@ Various applications will be installed into the Bareflank prefix which will be
 needed for both development, and regular use. Although this step is optional,
 it is highly recommended to add the prefix's bin directory to your path.
 
+#### Linux
+```
+export PATH="$HOME/bfprefix/bin:$PATH"
+```
+
+#### Windows
+```
+SET PATH=%HOMEPATH%\bfprefix\bin;%PATH%
+```
+
 Note that on Linux, if your using sudo, you might have to add the prefix path
 to your /etc/sudoers file in order to execute Bareflank applications and
 scripts using sudo.
+
+## CMake Notes (Optional)
+
+If you are running the unit tests, and a test fails, you need to tell CMake
+to output the failure.
+
+#### Linux
+```
+CTEST_OUTPUT_ON_FAILURE=yes make test
+```
+
+#### Windows
+```
+ctest --output-on-failure
+```
 
 ## License
 

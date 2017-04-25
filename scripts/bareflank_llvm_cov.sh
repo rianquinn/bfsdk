@@ -55,10 +55,10 @@ collect_test_stats() {
             filename=$(readlink -f ../$filename)
         fi
 
-        regions=$(awk '{print $4}' <<< $line)
-        functions=$(awk '{print $7}' <<< $line)
-        instantiations=$(awk '{print $10}' <<< $line)
-        lines=$(awk '{print $13}' <<< $line)
+        regions=$(awk '{print $3}' <<< $line)
+        functions=$(awk '{print $6}' <<< $line)
+        instantiations=$(awk '{print $9}' <<< $line)
+        lines=$(awk '{print $12}' <<< $line)
 
         if [[ ! ${region_stats[$filename]+exists} ]]; then
             region_stats[$filename]="incomplete"
@@ -76,19 +76,19 @@ collect_test_stats() {
             line_stats[$filename]="incomplete"
         fi
 
-        if [[ $regions == "100.00%" ]]; then
+        if [[ $regions == "0" ]]; then
             region_stats[$filename]="complete"
         fi
 
-        if [[ $functions == "100.00%" ]]; then
+        if [[ $functions == "0" ]]; then
             function_stats[$filename]="complete"
         fi
 
-        if [[ $instantiations == "100.00%" ]]; then
+        if [[ $instantiations == "0" ]]; then
             instantiation_stats[$filename]="complete"
         fi
 
-        if [[ $lines == "100.00%" ]]; then
+        if [[ $lines == "0" ]]; then
             line_stats[$filename]="complete"
         fi
 
