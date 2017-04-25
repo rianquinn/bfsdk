@@ -28,36 +28,36 @@
 /* -------------------------------------------------------------------------- */
 
 #ifdef __cplusplus
-#define scast(a, b) (static_cast<a>(b))
+#define bfscast(a, b) (static_cast<a>(b))
 #else
-#define scast(a, b) ((a)(b))
+#define bfscast(a, b) ((a)(b))
 #endif
 
 #ifdef __cplusplus
-#define rcast(a, b) (reinterpret_cast<a>(b))
+#define bfrcast(a, b) (reinterpret_cast<a>(b))
 #else
-#define rcast(a, b) ((a)(b))
+#define bfrcast(a, b) ((a)(b))
 #endif
 
 #ifdef __cplusplus
-#define add(a, b, c) (reinterpret_cast<a>(reinterpret_cast<char *>(b) + (c)))
+#define bfadd(a, b, c) (reinterpret_cast<a>(reinterpret_cast<char *>(b) + (c)))
 #else
-#define add(a, b, c) ((a)((char *)(b) + (c)))
+#define bfadd(a, b, c) ((a)((char *)(b) + (c)))
 #endif
 
 #ifdef __cplusplus
-#define cadd(a, b, c) (reinterpret_cast<a>(reinterpret_cast<const char *>(b) + (c)))
+#define bfcadd(a, b, c) (reinterpret_cast<a>(reinterpret_cast<const char *>(b) + (c)))
 #else
-#define cadd(a, b, c) ((a)((const char *)(b) + (c)))
+#define bfcadd(a, b, c) ((a)((const char *)(b) + (c)))
 #endif
 
-#define ignored(a) (void)a
+#define bfignored(a) (void)a
 
 /* -------------------------------------------------------------------------- */
 /* NULL                                                                       */
 /* -------------------------------------------------------------------------- */
 
-#ifndef __cplusplus
+#if !defined(__cplusplus) && !defined(nullptr)
 #define nullptr 0
 #endif
 

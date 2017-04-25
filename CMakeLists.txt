@@ -1,6 +1,6 @@
 # cmake ..
 
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.6)
 project(bfsdk C CXX)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -26,6 +26,7 @@ ExternalProject_Add(
     PREFIX ${CMAKE_BINARY_DIR}/json
     GIT_REPOSITORY https://github.com/Bareflank/json.git
     GIT_TAG v1.2
+    GIT_SHALLOW 1
     CMAKE_ARGS ${CATCH_CMAKE_ARGS}
 )
 
@@ -42,6 +43,7 @@ ExternalProject_Add(
     PREFIX ${CMAKE_BINARY_DIR}/catch
     GIT_REPOSITORY https://github.com/Bareflank/Catch.git
     GIT_TAG v1.2
+    GIT_SHALLOW 1
     CMAKE_ARGS ${CATCH_CMAKE_ARGS}
 )
 
@@ -58,6 +60,7 @@ ExternalProject_Add(
     PREFIX ${CMAKE_BINARY_DIR}/hippomocks
     GIT_REPOSITORY https://github.com/Bareflank/hippomocks.git
     GIT_TAG v1.2
+    GIT_SHALLOW 1
     CMAKE_ARGS ${HIPPOMOCKS_CMAKE_ARGS}
 )
 
@@ -74,6 +77,7 @@ ExternalProject_Add(
     PREFIX ${CMAKE_BINARY_DIR}/gsl
     GIT_REPOSITORY https://github.com/Bareflank/GSL.git
     GIT_TAG v1.2
+    GIT_SHALLOW 1
     CMAKE_ARGS ${GSL_CMAKE_ARGS}
 )
 
@@ -90,7 +94,68 @@ ExternalProject_Add(
     PREFIX ${CMAKE_BINARY_DIR}/astyle
     GIT_REPOSITORY https://github.com/Bareflank/astyle.git
     GIT_TAG v1.2
+    GIT_SHALLOW 1
     CMAKE_ARGS ${ASTYLE_CMAKE_ARGS}
+)
+
+# ------------------------------------------------------------------------------
+# Newlib
+# ------------------------------------------------------------------------------
+
+ExternalProject_Add(
+    newlib
+    PREFIX ${CMAKE_INSTALL_PREFIX}/src/newlib
+    GIT_REPOSITORY https://github.com/Bareflank/newlib.git
+    GIT_TAG v1.2
+    GIT_SHALLOW 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
+
+# ------------------------------------------------------------------------------
+# Download LLVM
+# ------------------------------------------------------------------------------
+
+ExternalProject_Add(
+    llvm
+    PREFIX ${CMAKE_INSTALL_PREFIX}/src/llvm
+    GIT_REPOSITORY https://github.com/Bareflank/llvm.git
+    GIT_TAG v1.2
+    GIT_SHALLOW 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
+
+# ------------------------------------------------------------------------------
+# Download Libcxxabi
+# ------------------------------------------------------------------------------
+
+ExternalProject_Add(
+    libcxxabi
+    PREFIX ${CMAKE_INSTALL_PREFIX}/src/libcxxabi
+    GIT_REPOSITORY https://github.com/Bareflank/libcxxabi.git
+    GIT_TAG v1.2
+    GIT_SHALLOW 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
+
+# ------------------------------------------------------------------------------
+# Download Libcxx
+# ------------------------------------------------------------------------------
+
+ExternalProject_Add(
+    libcxx
+    PREFIX ${CMAKE_INSTALL_PREFIX}/src/libcxx
+    GIT_REPOSITORY https://github.com/Bareflank/libcxx.git
+    GIT_TAG v1.2
+    GIT_SHALLOW 1
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
 )
 
 # ------------------------------------------------------------------------------

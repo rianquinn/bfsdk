@@ -45,8 +45,7 @@ namespace std
 /// Returns T regardless of lvalue / rvalue type
 ///
 template<class T> struct remove_reference {
-    /// Type T
-    typedef T type;
+    typedef T type;     ///< Type T
 };
 
 /// Remove Reference
@@ -54,8 +53,7 @@ template<class T> struct remove_reference {
 /// Returns T regardless of lvalue / rvalue type
 ///
 template<class T> struct remove_reference<T &> {
-    /// Type T
-    typedef T type;
+    typedef T type;     ///< Type T
 };
 
 /// Remove Reference
@@ -63,8 +61,7 @@ template<class T> struct remove_reference<T &> {
 /// Returns T regardless of lvalue / rvalue type
 ///
 template<class T> struct remove_reference < T && > {
-    /// Type T
-    typedef T type;
+    typedef T type;     ///< Type T
 };
 
 /// Forward
