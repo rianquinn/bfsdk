@@ -24,10 +24,10 @@
 
 TEST_CASE("shuffle test")
 {
-    auto &&tries = 0;
+    int tries = 0;
 
-    auto &&list1 = std::vector<int> {0, 1, 2, 3, 4};
-    auto &&list2 = std::vector<int> {0, 1, 2, 3, 4};
+    std::vector<int>list1{0, 1, 2, 3, 4};
+    std::vector<int>list2{0, 1, 2, 3, 4};
 
     while (list1 == list2 && tries++ < 10) {
         bfn::shuffle(list1);

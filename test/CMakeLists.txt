@@ -18,6 +18,7 @@ macro(do_test str)
 endmacro(do_test)
 
 do_test(bitmanip)
+do_test(buffer)
 do_test(debug)
 do_test(errorcodes)
 do_test(exceptions)

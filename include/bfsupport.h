@@ -73,10 +73,20 @@ struct section_info_t {
  * Provides information for executing an application including section
  * information, the program break and arguments.
  *
+ * @var crt_info_t::arg_type
+ *     0 = argc/argv, 1 == arg#, undefined otherwise
  * @var crt_info_t::argc
  *     the number of arguments
  * @var crt_info_t::argv
  *     the arguments
+ * @var crt_info_t::arg1
+ *     integer argument #1
+ * @var crt_info_t::arg2
+ *     integer argument #2
+ * @var crt_info_t::arg3
+ *     integer argument #3
+ * @var crt_info_t::arg4
+ *     integer argument #4
  * @var crt_info_t::info_num
  *     the number of modules
  * @var crt_info_t::info
@@ -89,8 +99,16 @@ struct section_info_t {
  *     (optional) the executable's program break
  */
 struct crt_info_t {
+
+    int arg_type;
+
     int argc;
     const char **argv;
+
+    uintptr_t arg1;
+    uintptr_t arg2;
+    uintptr_t arg3;
+    uintptr_t arg4;
 
     int info_num;
     struct section_info_t info[MAX_NUM_MODULES];

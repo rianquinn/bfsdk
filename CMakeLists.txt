@@ -238,6 +238,7 @@ install(FILES cmake/CMakeToolchain_VMM_39.txt DESTINATION cmake)
 install(FILES cmake/CMakeToolchain_VMM_40.txt DESTINATION cmake)
 
 install(FILES include/bfbitmanip.h DESTINATION include)
+install(FILES include/bfbuffer.h DESTINATION include)
 install(FILES include/bfconstants.h DESTINATION include)
 install(FILES include/bfdebug.h DESTINATION include)
 install(FILES include/bfdebugringinterface.h DESTINATION include)

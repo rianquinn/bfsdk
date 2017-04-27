@@ -33,6 +33,7 @@
 #include <fstream>
 
 #include <bfgsl.h>
+#include <bfbuffer.h>
 #include <bfpublish.h>
 #include <bfexception.h>
 
@@ -48,7 +49,7 @@ class file
 public:
 
     using text_data = std::string;                      ///< File format for text data
-    using binary_data = std::vector<char>;              ///< File format for binary data
+    using binary_data = bfn::buffer;                    ///< File format for binary data
     using filename_type = std::string;                  ///< File name type
     using extension_type = std::string;                 ///< Extension name type
     using path_list_type = std::vector<std::string>;    ///< Find files path type
@@ -90,20 +91,21 @@ public:
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
+        std::fstream handle(filename, std::ios_base::in | std::ios_base::binary);
+        if (handle) {
 
             handle.seekg(0, std::ios::end);
-            auto &&size = handle.tellg();
+            auto size = handle.tellg();
 
             if (size <= 0) {
                 return text_data{};
             }
 
             handle.seekg(0, std::ios::beg);
-            auto &&data = text_data(static_cast<binary_data::size_type>(size), 0);
+            text_data buffer(static_cast<text_data::size_type>(size), 0);
 
-            handle.read(&data.front(), size);
-            return std::move(data);
+            handle.read(&buffer.front(), size);
+            return buffer;
         }
 
         throw std::runtime_error("invalid filename: " + filename);
@@ -127,20 +129,21 @@ public:
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
+        std::fstream handle(filename, std::ios_base::in | std::ios_base::binary);
+        if (handle) {
 
             handle.seekg(0, std::ios::end);
-            auto &&size = handle.tellg();
+            auto size = handle.tellg();
 
             if (size <= 0) {
                 return binary_data{};
             }
 
             handle.seekg(0, std::ios::beg);
-            auto &&data = binary_data(static_cast<binary_data::size_type>(size));
+            binary_data buffer(static_cast<binary_data::size_type>(size));
 
-            handle.read(&data.front(), size);
-            return std::move(data);
+            handle.read(buffer.data(), size);
+            return buffer;
         }
 
         throw std::runtime_error("invalid filename: " + filename);
@@ -151,19 +154,20 @@ public:
     /// Writes text data to the file provided
     ///
     /// @expects filename.empty() == false
-    /// @expects data.empty() == false
+    /// @expects buffer.empty() == false
     /// @ensures none
     ///
     /// @param filename name of the file to write to.
-    /// @param data data to write
+    /// @param buffer data to write
     ///
     PUBLISH void
-    write_text(const filename_type &filename, const text_data &data) const
+    write_text(const filename_type &filename, const text_data &buffer) const
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::out | std::ios_base::binary)) {
-            std::copy(data.begin(), data.end(), std::ostreambuf_iterator<char>(handle));
+        std::fstream handle(filename, std::ios_base::out | std::ios_base::binary);
+        if (handle) {
+            handle.write(buffer.data(), static_cast<std::streamsize>(buffer.size()));
             return;
         }
 
@@ -175,19 +179,20 @@ public:
     /// Writes binary data to the file provided
     ///
     /// @expects filename.empty() == false
-    /// @expects data.empty() == false
+    /// @expects buffer.empty() == false
     /// @ensures none
     ///
     /// @param filename name of the file to write to.
-    /// @param data data to write
+    /// @param buffer data to write
     ///
     PUBLISH void
-    write_binary(const filename_type &filename, const binary_data &data) const
+    write_binary(const filename_type &filename, const binary_data &buffer) const
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::out | std::ios_base::binary)) {
-            std::copy(data.begin(), data.end(), std::ostreambuf_iterator<char>(handle));
+        std::fstream handle(filename, std::ios_base::out | std::ios_base::binary);
+        if (handle) {
+            handle.write(buffer.data(), static_cast<std::streamsize>(buffer.size()));
             return;
         }
 
@@ -229,7 +234,7 @@ public:
     PUBLISH bool
     exists(const filename_type &filename) const
     {
-        auto &&handle = std::ifstream(filename);
+        std::ifstream handle{filename};
         return handle.good();
     }
 
@@ -246,7 +251,8 @@ public:
     {
         expects(!filename.empty());
 
-        if (auto && handle = std::fstream(filename, std::ios_base::in | std::ios_base::binary)) {
+        std::fstream handle(filename, std::ios_base::in | std::ios_base::binary);
+        if (handle) {
             handle.seekg(0, std::ios::end);
             return static_cast<filesize_type>(handle.tellg());
         }
@@ -330,11 +336,11 @@ public:
 
 public:
 
-    file(file &&) noexcept = default;               ///< Default copy construction
-    file &operator=(file &&) noexcept = default;    ///< Default copy operator
+    file(file &&) noexcept = default;               ///< Default move construction
+    file &operator=(file &&) noexcept = default;    ///< Default move operator
 
-    file(const file &) = default;                   ///< Default move construction
-    file &operator=(const file &) = default;        ///< Default move operator
+    file(const file &) = default;                   ///< Default copy construction
+    file &operator=(const file &) = default;        ///< Default copy operator
 };
 
 #endif
