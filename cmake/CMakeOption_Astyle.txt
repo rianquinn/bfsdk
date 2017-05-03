@@ -1,0 +1,13 @@
+if (ENABLE_ASTYLE)
+
+    message("-- Code Formatting: Astyle")
+
+    add_custom_target(
+        format
+        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_astyle_format.sh
+        COMMENT "Running astyle format"
+        WORKING_DIRECTORY ../.
+        VERBATIM
+    )
+
+endif()

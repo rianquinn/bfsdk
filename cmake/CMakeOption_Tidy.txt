@@ -1,0 +1,12 @@
+if(ENABLE_TIDY)
+
+    message("-- Static Analysis: Clang Tidy")
+
+    add_custom_target(
+        tidy
+        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_clang_tidy.sh
+        COMMENT "Running clang-tidy checks"
+        VERBATIM
+    )
+
+endif()

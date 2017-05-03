@@ -20,6 +20,10 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+OUTPUT=$PWD/.astyle_results.txt
+
+rm -f $OUTPUT
+
 if [[ "$#" == 1 ]]; then
     cd $1
 fi
@@ -60,4 +64,14 @@ astyle \
     --close-templates \
     --add-brackets \
     --break-after-logical \
-    $FILES
+    $FILES > $OUTPUT
+
+if [[ -z $(grep -s Formatted $OUTPUT) ]]; then
+    echo -e "\xe2\x9c\x93 astyle passed"
+    exit
+else
+    echo -e "\xe2\x9c\x97 astyle failed: the following files were formatted:"
+    grep -s Formatted $OUTPUT | awk '{print $2}'
+    echo ""
+    exit -1
+fi
