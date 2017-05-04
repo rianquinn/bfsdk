@@ -60,7 +60,7 @@ public:
     ///
     /// @param size the size of the buffer to allocate
     ///
-    /// @throws std::bad_alloc if this constructor is unable allocate memory for the buffer
+    /// @throws std::bad_alloc if this constructor is unable to allocate memory for the buffer
     ///
     buffer(size_type size) :
         m_size(size),
@@ -95,7 +95,7 @@ public:
     ///
     /// @param list initial list to create the buffer
     ///
-    /// @throws std::bad_alloc if this constructor is unable allocate memory for the buffer
+    /// @throws std::bad_alloc if this constructor is unable to allocate memory for the buffer
     ///
     buffer(std::initializer_list<data_type> list) :
         m_size(list.size()),
