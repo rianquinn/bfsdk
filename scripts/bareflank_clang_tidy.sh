@@ -67,11 +67,41 @@ fi
 #
 rm -Rf $OUTPUT
 
+get_changed_files() {
+
+    working_files=$(git diff --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
+    indexed_files=$(git diff --cached --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
+    echo "$working_files" > tidy_files
+    echo "$indexed_files" >> tidy_files
+    duplicates=$(sort < tidy_files | uniq -d)
+    rm tidy_files
+
+    if [[ -n $duplicates ]]; then
+        echo "Stage changes for the following files, then rerun make tidy:"
+        for f in $duplicates; do
+            echo "    - $f"
+        done
+
+        exit
+    fi
+
+    files=$indexed_files
+
+    if [[ -z $files && $TEST == "Clang Tidy" ]]; then
+        files=$(git diff HEAD HEAD^ --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
+    fi
+}
+
 #
 # Run Clang Tidy
 #
 run_clang_tidy() {
-    run-clang-tidy-4.0.py -clang-tidy-binary clang-tidy-4.0 -header-filter=.* -checks=$1 > $OUTPUT 2>&1
+
+    run-clang-tidy-4.0.py \
+        -clang-tidy-binary clang-tidy-4.0 \
+        -header-filter=.* \
+        -checks=$1 \
+        files $files > $OUTPUT 2>&1
 
     if [[ -n $(grep "warning: " $OUTPUT) ]] || [[ -n $(grep "error: " $OUTPUT) ]]; then
         echo ""
@@ -87,6 +117,22 @@ run_clang_tidy() {
 
     rm -Rf $OUTPUT
 }
+
+#
+# run_clang_tidy will be run on staged *.cpp and *.h files locally, and on all
+# changed files relative to the previous commit when run on travis ci.
+#
+get_changed_files
+
+if [[ -z $files ]]; then
+    echo -e "\xe2\x9c\x93 clang-tidy passed: no .cpp/.h changes to analyze"
+    exit
+fi
+
+echo "Files undergoing static analysis:"
+for f in $files; do
+    echo "  - $f"
+done
 
 #
 # Perform Checks
