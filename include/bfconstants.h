@@ -160,7 +160,7 @@
  * Max Supported Modules
  *
  * The maximum number of modules supported by the VMM. Note that the ELF loader
- * has it's own version of this that likely will need to be changed if this
+ * has its own version of this that likely will need to be changed if this
  * value changes.
  */
 #ifndef MAX_NUM_MODULES
@@ -200,7 +200,7 @@
  *
  * Each entry function is guarded with a custom stack to prevent stack
  * overflows from corrupting the kernel, as well as providing a larger stack
- * that common in userspace code, but not in the kernel. If stack corruption
+ * that's common in userspace code, but not in the kernel. If stack corruption
  * is occuring, this function likely needs to be increased. Note one stack
  * frame is allocated per CPU, so only increase this if needed.
  *
@@ -208,8 +208,8 @@
  *       bottom of the stack if needed.
  *
  * Note: This is hard coded in the thread_context.asm as there is no way to
- *       use this include in NASM. If you change this, you must change this
- *       in this file as well.
+ *       use this include in NASM. If you change this, you must change the
+ *       value in that file as well.
  */
 #ifndef STACK_SIZE
 #define STACK_SIZE (1ULL << 15)
@@ -218,9 +218,9 @@
 /*
  * Thread Local Storage (TLS) Size
  *
- * Bareflank doesn't support threads, but it does support Multi-Core, and
- * this we need a way to store CPU specific information. Certain libc++
- * operations (for example, std::uncaught_exceptions) needs to use this CPU
+ * Bareflank don't support threads, but it does support Multi-Core, and
+ * we need a way to store CPU specific information. Certain libc++
+ * operations (for example, std::uncaught_exceptions) need to use this CPU
  * specific storage so that the cores are not interfering with each other.
  * So as far as the code is concerned, TLS is being used, even if a "thread"
  * in the traditional sense isn't.
