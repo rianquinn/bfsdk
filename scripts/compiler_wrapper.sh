@@ -30,13 +30,28 @@ SYSROOT_NAME=$(basename $0 | cut -d '-' -f 2)
 PROGRAM_NAME=$(basename $0 | cut -d '-' -f 3)
 VERSION_NAME=$(basename $0 | cut -d '-' -f 4)
 
+# ------------------------------------------------------------------------------
+# Compiler
+# ------------------------------------------------------------------------------
+
+case $PROGRAM_NAME in
+
+*"clang")
+    C_COMPILER="true"
+    ;;
+
+*"clang++")
+    CXX_COMPILER="true"
+    ;;
+esac
+
 if [[ -z $VERSION_NAME ]]; then
     COMPILER=$PROGRAM_NAME
 else
     COMPILER=$PROGRAM_NAME-$VERSION_NAME
 fi
 
-LINKER="x86_64-vmm-elf-ld"
+LINKER="$BIN_LOCATION/x86_64-vmm-elf-ld"
 
 # ------------------------------------------------------------------------------
 # Mode Flags
@@ -61,8 +76,22 @@ do
         i=$((i+1))
         ;;
 
-    "-DCOMPILING_LIBCXX")
-        export COMPILING_LIBCXX="true"
+    "-nostdinc-c")
+        export DISABLE_LIB_C="true"
+        export DISABLE_INCLUDE_C="true"
+        ;;
+
+    "-nostdinc-c++")
+        export DISABLE_LIB_CXX="true"
+        export DISABLE_INCLUDE_CXX="true"
+        ;;
+
+    "-nostdlib-c")
+        export DISABLE_LIB_C="true"
+        ;;
+
+    "-nostdlib-c++")
+        export DISABLE_LIB_CXX="true"
         ;;
 
     esac
@@ -92,12 +121,16 @@ SYSROOT="$BIN_LOCATION/../sysroots/x86_64-$SYSROOT_NAME-elf"
 
 SYSROOT_INC_PATH=""
 
-if [[ -d "$SYSROOT/include" ]]; then
-    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include"
-fi
+if [[ -z $DISABLE_INCLUDE_C ]]; then
 
-if [[ -z $COMPILING_LIBCXX ]] && [[ -d "$SYSROOT/include/c++/v1" ]]; then
-    SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include/c++/v1"
+    if [[ -z $DISABLE_INCLUDE_CXX ]] && [[ $CXX_COMPILER == "true" ]] && [[ -d "$SYSROOT/include/c++/v1" ]]; then
+        SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include/c++/v1"
+    fi
+
+    if [[ -d "$SYSROOT/include" ]]; then
+        SYSROOT_INC_PATH="$SYSROOT_INC_PATH -isystem $SYSROOT/include"
+    fi
+
 fi
 
 # ------------------------------------------------------------------------------
@@ -105,6 +138,28 @@ fi
 # ------------------------------------------------------------------------------
 
 SYSROOT_LIB_PATH="-L$SYSROOT/lib"
+
+if [[ -z $DISABLE_LIB_C ]] && [[ ! $SHARED_LIBRARY == "true" ]]; then
+
+    if [[ -f "$SYSROOT/lib/libc.so" ]] && \
+       [[ -f "$SYSROOT/lib/libbfsyscall.so" ]] && \
+       [[ -f "$SYSROOT/lib/libbfcrt_static.a" ]]; then
+
+        if [[ -z $DISABLE_LIB_CXX ]] && [[ $CXX_COMPILER == "true" ]]; then
+
+            if [[ -f "$SYSROOT/lib/libc++.so.1.0" ]] && \
+               [[ -f "$SYSROOT/lib/libc++abi.so.1.0" ]] && \
+               [[ -f "$SYSROOT/lib/libpthread.so" ]] && \
+               [[ -f "$SYSROOT/lib/libbfunwind.so" ]]; then
+
+                SYSROOT_LIB_PATH="${SYSROOT_LIB_PATH} -lc++ -lc++abi -lpthread -lbfunwind"
+            fi
+        fi
+
+        SYSROOT_LIB_PATH="${SYSROOT_LIB_PATH} -lc -lbfsyscall --whole-archive -lbfcrt_static --no-whole-archive"
+    fi
+
+fi
 
 # ------------------------------------------------------------------------------
 # Filter Arguments
@@ -127,6 +182,22 @@ do
     ARG=${argArray[i]}
 
     case $ARG in
+
+    "-nostdinc-c")
+        continue
+        ;;
+
+    "-nostdinc-c++")
+        continue
+        ;;
+
+    "-nostdlib-c")
+        continue
+        ;;
+
+    "-nostdlib-c++")
+        continue
+        ;;
 
     "-stdlib=libc++")
         continue

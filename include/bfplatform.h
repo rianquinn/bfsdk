@@ -172,6 +172,25 @@ int64_t platform_set_affinity(int64_t affinity);
  */
 void platform_restore_affinity(int64_t affinity);
 
+/**
+ * Get CPU Number
+ *
+ * @expects none
+ * @ensures none
+ *
+ * @return returns the current CPU number and on some systems, disables
+ *     preemption
+ */
+int64_t platform_get_current_cpu_num(void);
+
+/**
+ * Restore Preemption
+ *
+ * @expects none
+ * @ensures none
+ */
+void platform_restore_preemption(void);
+
 #ifdef __cplusplus
 }
 #endif

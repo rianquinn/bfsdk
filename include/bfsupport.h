@@ -105,10 +105,10 @@ struct crt_info_t {
     int argc;
     const char **argv;
 
+    uintptr_t request;
     uintptr_t arg1;
     uintptr_t arg2;
     uintptr_t arg3;
-    uintptr_t arg4;
 
     int info_num;
     struct section_info_t info[MAX_NUM_MODULES];
@@ -117,5 +117,36 @@ struct crt_info_t {
     uintptr_t vcpuid;
     uintptr_t program_break;
 };
+
+/**
+ * Request IDs
+ *
+ * The following defines the different types of requests that can be made
+ * when calling bfmain instead of main. Note that these are simply the
+ * currently defined requests, users can add to this as needed.
+ *
+ * @cond
+ */
+
+#define BF_REQUEST_INIT 0
+#define BF_REQUEST_FINI 1
+#define BF_REQUEST_VMM_INIT 2
+#define BF_REQUEST_VMM_FINI 3
+#define BF_REQUEST_ADD_MDL 4
+#define BF_REQUEST_GET_DRR 5
+#define BF_REQUEST_END 0xFFFF
+
+/* @endcond */
+
+/**
+ * Start
+ *
+ * Defines the function signature for the _start function
+ */
+#ifdef __cplusplus
+using _start_t = int64_t (*)(char *stack, const struct crt_info_t *);
+#else
+typedef int64_t (*_start_t)(char *stack, const struct crt_info_t *);
+#endif
 
 #endif

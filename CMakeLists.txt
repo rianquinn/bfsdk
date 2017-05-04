@@ -19,17 +19,21 @@ include("cmake/CMakeOption_Astyle.txt")
 # JSON
 # ------------------------------------------------------------------------------
 
-list(APPEND CATCH_CMAKE_ARGS
+list(APPEND JSON_CMAKE_ARGS
     "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
 )
 
 ExternalProject_Add(
     json
-    PREFIX ${CMAKE_BINARY_DIR}/json
-    GIT_REPOSITORY https://github.com/Bareflank/json.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${CATCH_CMAKE_ARGS}
+    GIT_REPOSITORY      https://github.com/Bareflank/json.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    CMAKE_ARGS          ${JSON_CMAKE_ARGS}
+    TMP_DIR             ${CMAKE_BINARY_DIR}/bfsdk/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsdk/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsdk/download
+    SOURCE_DIR          ${CMAKE_BINARY_DIR}/bfsdk/src
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsdk/build
 )
 
 # ------------------------------------------------------------------------------
@@ -42,11 +46,15 @@ list(APPEND CATCH_CMAKE_ARGS
 
 ExternalProject_Add(
     catch
-    PREFIX ${CMAKE_BINARY_DIR}/catch
-    GIT_REPOSITORY https://github.com/Bareflank/Catch.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${CATCH_CMAKE_ARGS}
+    GIT_REPOSITORY      https://github.com/Bareflank/Catch.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    CMAKE_ARGS          ${CATCH_CMAKE_ARGS}
+    TMP_DIR             ${CMAKE_BINARY_DIR}/catch/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/catch/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/catch/download
+    SOURCE_DIR          ${CMAKE_BINARY_DIR}/catch/src
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/catch/build
 )
 
 # ------------------------------------------------------------------------------
@@ -59,11 +67,15 @@ list(APPEND HIPPOMOCKS_CMAKE_ARGS
 
 ExternalProject_Add(
     hippomocks
-    PREFIX ${CMAKE_BINARY_DIR}/hippomocks
-    GIT_REPOSITORY https://github.com/Bareflank/hippomocks.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${HIPPOMOCKS_CMAKE_ARGS}
+    GIT_REPOSITORY      https://github.com/Bareflank/hippomocks.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    CMAKE_ARGS          ${HIPPOMOCKS_CMAKE_ARGS}
+    TMP_DIR             ${CMAKE_BINARY_DIR}/hippomocks/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/hippomocks/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/hippomocks/download
+    SOURCE_DIR          ${CMAKE_BINARY_DIR}/hippomocks/src
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/hippomocks/build
 )
 
 # ------------------------------------------------------------------------------
@@ -76,11 +88,15 @@ list(APPEND GSL_CMAKE_ARGS
 
 ExternalProject_Add(
     gsl
-    PREFIX ${CMAKE_BINARY_DIR}/gsl
-    GIT_REPOSITORY https://github.com/Bareflank/GSL.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${GSL_CMAKE_ARGS}
+    GIT_REPOSITORY      https://github.com/Bareflank/GSL.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    CMAKE_ARGS          ${GSL_CMAKE_ARGS}
+    TMP_DIR             ${CMAKE_BINARY_DIR}/gsl/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/gsl/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/gsl/download
+    SOURCE_DIR          ${CMAKE_BINARY_DIR}/gsl/src
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/gsl/build
 )
 
 # ------------------------------------------------------------------------------
@@ -93,11 +109,15 @@ list(APPEND ASTYLE_CMAKE_ARGS
 
 ExternalProject_Add(
     astyle
-    PREFIX ${CMAKE_BINARY_DIR}/astyle
-    GIT_REPOSITORY https://github.com/Bareflank/astyle.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CMAKE_ARGS ${ASTYLE_CMAKE_ARGS}
+    GIT_REPOSITORY      https://github.com/Bareflank/astyle.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    CMAKE_ARGS          ${ASTYLE_CMAKE_ARGS}
+    TMP_DIR             ${CMAKE_BINARY_DIR}/astyle/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/astyle/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/astyle/download
+    SOURCE_DIR          ${CMAKE_BINARY_DIR}/astyle/src
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/astyle/build
 )
 
 # ------------------------------------------------------------------------------
@@ -106,15 +126,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     newlib
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/newlib-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/newlib-build
-    GIT_REPOSITORY https://github.com/Bareflank/newlib.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/newlib.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/newlib/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/newlib/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/newlib/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/newlib
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/newlib/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -123,15 +145,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     llvm
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/llvm-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/llvm-build
-    GIT_REPOSITORY https://github.com/Bareflank/llvm.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/llvm.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/llvm/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/llvm/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/llvm/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/llvm
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/llvm/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -140,15 +164,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     libcxxabi
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/libcxxabi-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/libcxxabi-build
-    GIT_REPOSITORY https://github.com/Bareflank/libcxxabi.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/libcxxabi.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/libcxxabi/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxxabi/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxxabi/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxxabi
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxxabi/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -157,15 +183,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     libcxx
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/libcxx-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/libcxx-build
-    GIT_REPOSITORY https://github.com/Bareflank/libcxx.git
-    GIT_TAG v1.2
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/libcxx.git
+    GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/libcxx/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxx/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxx/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxx
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxx/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -174,14 +202,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     bfunwind
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/bfunwind-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/bfunwind-build
-    GIT_REPOSITORY https://github.com/Bareflank/bfunwind.git
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/bfunwind.git
+    #GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/bfunwind/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfunwind/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfunwind/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfunwind
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfunwind/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -190,14 +221,17 @@ ExternalProject_Add(
 
 ExternalProject_Add(
     bfsupport
-    PREFIX ${CMAKE_INSTALL_PREFIX}
-    STAMP_DIR ${CMAKE_BINARY_DIR}/bfsupport-stamp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/bfsupport-build
-    GIT_REPOSITORY https://github.com/Bareflank/bfsupport.git
-    GIT_SHALLOW 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
+    GIT_REPOSITORY      https://github.com/Bareflank/bfsupport.git
+    #GIT_TAG             v1.2
+    GIT_SHALLOW         1
+    TMP_DIR             ${CMAKE_BINARY_DIR}/bfsupport/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsupport/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsupport/download
+    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfsupport
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsupport/build
+    CONFIGURE_COMMAND   ""
+    BUILD_COMMAND       ""
+    INSTALL_COMMAND     ""
 )
 
 # ------------------------------------------------------------------------------
@@ -205,9 +239,8 @@ ExternalProject_Add(
 # ------------------------------------------------------------------------------
 
 add_custom_command(
-    OUTPUT ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-elf-ld
-    COMMAND ../scripts/create_linker.sh "x86_64-vmm-elf" ${CMAKE_INSTALL_PREFIX}
-    VERBATIM
+    OUTPUT      ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-elf-ld
+    COMMAND     ${CMAKE_SOURCE_DIR}/scripts/create_linker.sh "x86_64-vmm-elf" ${CMAKE_INSTALL_PREFIX}
 )
 
 if(NOT WIN32 STREQUAL "1")
