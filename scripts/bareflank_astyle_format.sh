@@ -67,7 +67,7 @@ astyle \
     $FILES > $OUTPUT
 
 if [[ -z $(grep -s Formatted $OUTPUT) ]]; then
-    echo -e "\xe2\x9c\x93 astyle passed"
+    echo -e "\033[1;32m\xe2\x9c\x93 astyle passed\033[0m"
     exit
 else
     echo -e "\xe2\x9c\x97 astyle failed: the following files were formatted:"

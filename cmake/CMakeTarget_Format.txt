@@ -1,4 +1,4 @@
-if (ENABLE_ASTYLE)
+if (ENABLE_FORMAT)
 
     message("-- Code Formatting: Astyle")
 

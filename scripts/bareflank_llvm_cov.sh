@@ -101,7 +101,7 @@ collect_test_stats() {
 
 if [[ "$#" == 0 ]]; then
 
-    for f in $(find . -path "*/test/test_*"); do
+    for f in $(find . -path "./*test/test_*"); do
         run_test $f
         collect_test_stats $f
     done

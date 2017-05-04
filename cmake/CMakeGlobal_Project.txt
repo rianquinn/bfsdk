@@ -168,3 +168,11 @@ endif()
 # ------------------------------------------------------------------------------
 
 option(BUILD_SHARED_LIBS "build shared libraries" ON)
+
+# ------------------------------------------------------------------------------
+# Custom Targets
+# ------------------------------------------------------------------------------
+
+include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Tidy.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Coverage.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Format.txt")
