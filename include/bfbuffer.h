@@ -119,7 +119,7 @@ public:
     ///
     /// @return returns a pointer to the buffer
     ///
-    data_type *get()
+    data_type *get() noexcept
     { return m_data.get(); }
 
     /// Get Data
@@ -129,7 +129,7 @@ public:
     ///
     /// @return returns a pointer to the buffer
     ///
-    data_type *data()
+    data_type *data() noexcept
     { return m_data.get(); }
 
     /// Get Data
@@ -139,7 +139,7 @@ public:
     ///
     /// @return returns a pointer to the buffer
     ///
-    const data_type *data() const
+    const data_type *data() const noexcept
     { return m_data.get(); }
 
     /// Is Empty
@@ -149,7 +149,7 @@ public:
     ///
     /// @return returns true if size() == 0, false otherwise
     ///
-    bool empty() const
+    bool empty() const noexcept
     { return m_size == 0; }
 
     /// Valid
@@ -166,7 +166,7 @@ public:
     ///
     /// @return returns the size of the buffer
     ///
-    size_type size() const
+    size_type size() const noexcept
     { return m_size; }
 
     /// Release
@@ -174,7 +174,7 @@ public:
     /// @expects none
     /// @ensures none
     ///
-    void release()
+    void release() noexcept
     {
         m_size = 0;
         m_data.release();
@@ -236,7 +236,7 @@ swap(buffer &lhs, buffer &rhs) noexcept
 /// @param rhs buffer to compare
 ///
 inline bool
-operator==(const buffer &lhs, const buffer &rhs)
+operator==(const buffer &lhs, const buffer &rhs) noexcept
 {
     if (lhs.size() != rhs.size()) {
         return false;
@@ -254,7 +254,7 @@ operator==(const buffer &lhs, const buffer &rhs)
 /// @param rhs buffer to compare
 ///
 inline bool
-operator!=(const buffer &lhs, const buffer &rhs)
+operator!=(const buffer &lhs, const buffer &rhs) noexcept
 { return !(lhs == rhs); }
 
 }
