@@ -34,8 +34,8 @@ namespace bfn
 
 /// Buffer
 ///
-/// Simple character buffer class that stores both a buffer and it's size.
-/// This class is a hybrid between std::array, and std::unique_ptr. It is
+/// Simple character buffer class that stores both a buffer and its size.
+/// This class is a hybrid between std::array, and std::unique_ptr. It's
 /// dynamic, doesn't have support for iterators or random memory access,
 /// and cannot be copied.
 ///
@@ -59,6 +59,8 @@ public:
     /// @ensures none
     ///
     /// @param size the size of the buffer to allocate
+    ///
+    /// @throws std::bad_alloc if this constructor is unable allocate memory for the buffer
     ///
     buffer(size_type size) :
         m_size(size),
@@ -92,6 +94,8 @@ public:
     /// @ensures none
     ///
     /// @param list initial list to create the buffer
+    ///
+    /// @throws std::bad_alloc if this constructor is unable allocate memory for the buffer
     ///
     buffer(std::initializer_list<data_type> list) :
         m_size(list.size()),
