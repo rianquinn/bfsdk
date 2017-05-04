@@ -43,7 +43,7 @@ namespace bfn
 template<typename T> void
 shuffle(std::vector<T> &list)
 {
-    auto &&rd = std::random_device{};
+    std::random_device rd;
     std::shuffle(list.begin(), list.end(), std::mt19937{rd()});
 }
 
