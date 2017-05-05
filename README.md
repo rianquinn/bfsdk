@@ -32,7 +32,7 @@ setup-x86_64.exe -q -P git,make,gcc-core,gcc-g++,nasm,clang,clang++,cmake,wget
 
 Install the following packages:
 - [Visual Studio SDK 10](https://go.microsoft.com/fwlink/?linkid=838916)
-- [Visual Stidio WDK 10](https://go.microsoft.com/fwlink/p/?LinkId=526733)
+- [Visual Studio WDK 10](https://go.microsoft.com/fwlink/p/?LinkId=526733)
 - [Visual Studio 2017](https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=15#)
   - Check "Desktop development with C++"
   - Check "C++ CLI / Support"
@@ -91,8 +91,8 @@ ctest
 ## Prefix Notes (Optional)
 
 Once built and installed, the SDK will create the Bareflank "prefix" which is a
-working directory where dependencies and various different scripts are
-installed. By default, the prefix is set to:
+working directory where dependencies and various needed scripts are installed. By
+default, the prefix is set to:
 
 #### Linux
 ```
