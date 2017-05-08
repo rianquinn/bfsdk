@@ -34,6 +34,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsdk/download
     SOURCE_DIR          ${CMAKE_BINARY_DIR}/bfsdk/src
     BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsdk/build
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -55,6 +56,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/catch/download
     SOURCE_DIR          ${CMAKE_BINARY_DIR}/catch/src
     BINARY_DIR          ${CMAKE_BINARY_DIR}/catch/build
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -76,6 +78,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/hippomocks/download
     SOURCE_DIR          ${CMAKE_BINARY_DIR}/hippomocks/src
     BINARY_DIR          ${CMAKE_BINARY_DIR}/hippomocks/build
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -97,6 +100,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/gsl/download
     SOURCE_DIR          ${CMAKE_BINARY_DIR}/gsl/src
     BINARY_DIR          ${CMAKE_BINARY_DIR}/gsl/build
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -118,6 +122,7 @@ ExternalProject_Add(
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/astyle/download
     SOURCE_DIR          ${CMAKE_BINARY_DIR}/astyle/src
     BINARY_DIR          ${CMAKE_BINARY_DIR}/astyle/build
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -137,6 +142,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -156,6 +162,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -175,6 +182,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -194,6 +202,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -213,6 +222,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
@@ -232,6 +242,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND   ""
     BUILD_COMMAND       ""
     INSTALL_COMMAND     ""
+    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
 # ------------------------------------------------------------------------------
