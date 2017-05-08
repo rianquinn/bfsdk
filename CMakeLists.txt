@@ -249,20 +249,17 @@ ExternalProject_Add(
 # Binutils
 # ------------------------------------------------------------------------------
 
-add_custom_command(
-    OUTPUT      ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-elf-ld
-    COMMAND     ${CMAKE_SOURCE_DIR}/scripts/create_linker.sh "x86_64-vmm-elf" ${CMAKE_INSTALL_PREFIX}
-)
-
 if(NOT WIN32 STREQUAL "1")
-    add_custom_target(binutils ALL DEPENDS ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-elf-ld)
+    add_custom_target(binutils ALL VERBATIM COMMAND ${CMAKE_SOURCE_DIR}/scripts/create_linker.sh x86_64-vmm-elf ${CMAKE_INSTALL_PREFIX})
 endif()
 
 # ------------------------------------------------------------------------------
 # Subdirectories
 # ------------------------------------------------------------------------------
 
-add_subdirectory(test)
+if(ENABLE_UNITTESTING)
+    add_subdirectory(tests)
+endif()
 
 # ------------------------------------------------------------------------------
 # Install
@@ -318,7 +315,6 @@ if(NOT WIN32 STREQUAL "1")
     install(PROGRAMS scripts/bareflank_clang_tidy.sh DESTINATION bin)
     install(PROGRAMS scripts/bareflank_llvm_cov.sh DESTINATION bin)
     install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
-    install(PROGRAMS scripts/create_linker.sh DESTINATION bin)
     install(PROGRAMS scripts/link_newlib.sh DESTINATION bin)
 
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
