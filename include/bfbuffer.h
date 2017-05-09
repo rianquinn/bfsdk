@@ -215,6 +215,8 @@ public:
     ///
     /// @param count the number of bytes to resize the buffer to
     ///
+    /// @throws std::bad_alloc if this method is unable to allocate memory for the buffer
+    ///
     void
     resize(size_type count)
     {
