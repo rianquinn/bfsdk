@@ -144,6 +144,7 @@ matrix:
       - |
         cmake \
           -DENABLE_COVERAGE=ON \
+          -DENABLE_UNITTESTING \
           ..
       - make
       - make test
@@ -173,7 +174,8 @@ matrix:
     script:
       - |
         cmake \
-          -DENABLE_DYNAMIC_ASAN=on \
+          -DENABLE_DYNAMIC_ASAN=ON \
+          -DENABLE_UNITTESTING=ON \
           ..
       - make
       - make test
@@ -188,6 +190,7 @@ matrix:
       - |
         cmake \
           -DENABLE_DYNAMIC_USAN=on \
+          -DENABLE_UNITTESTING=ON \
           ..
       - make
       - make test
@@ -199,6 +202,9 @@ matrix:
     env:
       - TEST="Native Test"
     script:
-      - cmake ..
+      - |
+        cmake \
+          -DENABLE_UNITTESTING=ON \
+          ..
       - make install
       - make test

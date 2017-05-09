@@ -195,11 +195,35 @@ public:
 
     /// Span
     ///
+    /// @expects none
+    /// @ensures none
+    ///
     /// @return returns a gsl::span that can be used to access the buffer.
     ///
     gsl::span<data_type>
     span() const
     { return gsl::make_span(m_data, gsl::narrow_cast<std::ptrdiff_t>(m_size)); }
+
+    /// Resize
+    ///
+    /// Resize the buffer. If count is smaller than the original size, the
+    /// data is truncated. If count is larger than the original size, the
+    /// remaining data is undefined.
+    ///
+    /// @expects none
+    /// @ensures none
+    ///
+    /// @param count the number of bytes to resize the buffer to
+    ///
+    void
+    resize(size_type count)
+    {
+        auto new_data = std::make_unique<data_type[]>(count);
+        memcpy(new_data.get(), m_data.get(), std::min(m_size, count));
+
+        m_size = count;
+        m_data = std::move(new_data);
+    }
 
 private:
 

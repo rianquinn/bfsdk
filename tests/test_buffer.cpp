@@ -154,3 +154,19 @@ TEST_CASE("equals / not equals")
     CHECK(buffer3 == buffer2);
     CHECK(buffer3 != buffer1);
 }
+
+TEST_CASE("resize")
+{
+    auto hello = {'h', 'e', 'l', 'l', 'o'};
+
+    bfn::buffer buffer(hello);
+    buffer.resize(50);
+
+    CHECK(buffer.size() == 50);
+    CHECK(buffer.span()[0] == 'h');
+
+    buffer.resize(2);
+
+    CHECK(buffer.size() == 2);
+    CHECK(buffer.span()[0] == 'h');
+}
