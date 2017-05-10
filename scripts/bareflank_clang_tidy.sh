@@ -69,8 +69,8 @@ rm -Rf $OUTPUT
 
 get_changed_files() {
 
-    working_files=$(git diff --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
-    indexed_files=$(git diff --cached --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
+    working_files=$(git diff --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
+    indexed_files=$(git diff --cached --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
     echo "$working_files" > tidy_files
     echo "$indexed_files" >> tidy_files
     duplicates=$(sort < tidy_files | uniq -d)
@@ -88,7 +88,7 @@ get_changed_files() {
     files=$indexed_files
 
     if [[ -z $files && $TEST == "Clang Tidy" ]]; then
-        files=$(git diff HEAD HEAD^ --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h)" || true)
+        files=$(git diff HEAD HEAD^ --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
     fi
 }
 
@@ -125,7 +125,7 @@ run_clang_tidy() {
 get_changed_files
 
 if [[ -z $files ]]; then
-    echo -e "\xe2\x9c\x93 clang-tidy passed: no .cpp/.h changes to analyze"
+    echo -e "\033[1;32m\xe2\x9c\x93 clang-tidy passed: no .c/.cpp/.h changes to analyze\033[0m"
     exit
 fi
 
