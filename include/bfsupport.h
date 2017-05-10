@@ -79,14 +79,14 @@ struct section_info_t {
  *     the number of arguments
  * @var crt_info_t::argv
  *     the arguments
+* @var crt_info_t::request
+ *     -
  * @var crt_info_t::arg1
  *     integer argument #1
  * @var crt_info_t::arg2
  *     integer argument #2
  * @var crt_info_t::arg3
  *     integer argument #3
- * @var crt_info_t::arg4
- *     integer argument #4
  * @var crt_info_t::info_num
  *     the number of modules
  * @var crt_info_t::info
