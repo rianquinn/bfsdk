@@ -144,7 +144,6 @@ matrix:
       - |
         cmake \
           -DENABLE_COVERAGE=ON \
-          -DENABLE_UNITTESTING \
           ..
       - make
       - make test
@@ -163,7 +162,7 @@ matrix:
           -DENABLE_COVERAGE_LLVM=ON \
           ..
       - make install
-      - bareflank_llvm_cov.sh
+      - make llvm_coverage
 
   #
   # Google Address Sanitizer
