@@ -45,6 +45,8 @@
 #
 OUTPUT=$PWD/.clang_tidy_results.txt
 
+CORES=$(grep -c ^processor /proc/cpuinfo)
+
 #
 # Make sure we can run this script
 #
@@ -98,6 +100,7 @@ get_changed_files() {
 run_clang_tidy() {
 
     run-clang-tidy-4.0.py \
+        -j $CORES \
         -clang-tidy-binary clang-tidy-4.0 \
         -header-filter=.* \
         -checks=$1 \
