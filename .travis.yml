@@ -128,7 +128,6 @@ matrix:
     script:
       - |
         cmake \
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DENABLE_TIDY=ON \
           ..
       - make install
@@ -174,7 +173,6 @@ matrix:
       - |
         cmake \
           -DENABLE_DYNAMIC_ASAN=ON \
-          -DENABLE_UNITTESTING=ON \
           ..
       - make
       - make test
@@ -188,8 +186,7 @@ matrix:
     script:
       - |
         cmake \
-          -DENABLE_DYNAMIC_USAN=on \
-          -DENABLE_UNITTESTING=ON \
+          -DENABLE_DYNAMIC_USAN=ON \
           ..
       - make
       - make test

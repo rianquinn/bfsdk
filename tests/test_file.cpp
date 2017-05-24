@@ -29,6 +29,11 @@
 
 file g_file;
 
+TEST_CASE("constructor / destructor")
+{
+    file f;
+}
+
 TEST_CASE("read with bad filename")
 {
     std::string filename{"/blah/bad_filename.txt"};
