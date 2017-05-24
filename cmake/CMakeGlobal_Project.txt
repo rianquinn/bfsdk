@@ -142,18 +142,6 @@ message("-- Cross Compiler Sysroot: ${BAREFLANK_SYSROOT_PATH}")
 # Flag Information
 # ------------------------------------------------------------------------------
 
-if(ENABLE_COVERAGE OR
-   ENABLE_COVERAGE_LLVM OR
-   ENABLE_TIDY OR
-   ENABLE_DYNAMIC_USAN OR
-   ENABLE_DYNAMIC_ASAN)
-    set(ENABLE_UNITTESTING ON)
-endif()
-
-if(ENABLE_TIDY)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif()
-
 if(BAREFLANK_TOOLCHAIN_FLAGS)
     message("-- Flags: ${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS}")
     include("${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS}")
@@ -180,6 +168,27 @@ endif()
 # ------------------------------------------------------------------------------
 
 option(BUILD_SHARED_LIBS "build shared libraries" ON)
+
+# ------------------------------------------------------------------------------
+# Testing
+# ------------------------------------------------------------------------------
+
+if(ENABLE_COVERAGE OR
+   ENABLE_COVERAGE_LLVM OR
+   ENABLE_TIDY OR
+   ENABLE_DYNAMIC_USAN OR
+   ENABLE_DYNAMIC_ASAN)
+    set(ENABLE_UNITTESTING ON)
+endif()
+
+if(ENABLE_TIDY)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
+
+if(ENABLE_UNITTESTING)
+    include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
+    message("-- Unit Testing Enabled")
+endif()
 
 # ------------------------------------------------------------------------------
 # Custom Targets
