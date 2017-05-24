@@ -127,128 +127,184 @@ ExternalProject_Add(
 # Download Newlib
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    newlib
-    GIT_REPOSITORY      https://github.com/Bareflank/newlib.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/newlib/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/newlib/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/newlib/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/newlib
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/newlib/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        newlib
+        GIT_REPOSITORY      https://github.com/Bareflank/newlib.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/newlib/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/newlib/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/newlib/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/newlib
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/newlib/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download LLVM
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    llvm
-    GIT_REPOSITORY      https://github.com/Bareflank/llvm.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/llvm/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/llvm/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/llvm/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/llvm
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/llvm/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        llvm
+        GIT_REPOSITORY      https://github.com/Bareflank/llvm.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/llvm/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/llvm/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/llvm/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/llvm
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/llvm/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download Libcxxabi
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    libcxxabi
-    GIT_REPOSITORY      https://github.com/Bareflank/libcxxabi.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/libcxxabi/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxxabi/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxxabi/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxxabi
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxxabi/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        libcxxabi
+        GIT_REPOSITORY      https://github.com/Bareflank/libcxxabi.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/libcxxabi/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxxabi/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxxabi/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxxabi
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxxabi/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download Libcxx
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    libcxx
-    GIT_REPOSITORY      https://github.com/Bareflank/libcxx.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/libcxx/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxx/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxx/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxx
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxx/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        libcxx
+        GIT_REPOSITORY      https://github.com/Bareflank/libcxx.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/libcxx/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxx/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxx/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxx
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxx/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download Unwind
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    bfunwind
-    GIT_REPOSITORY      https://github.com/Bareflank/bfunwind.git
-    #GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/bfunwind/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfunwind/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfunwind/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfunwind
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfunwind/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        bfunwind
+        GIT_REPOSITORY      https://github.com/Bareflank/bfunwind.git
+        #GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/bfunwind/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/bfunwind/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfunwind/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfunwind
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/bfunwind/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download Support
 # ------------------------------------------------------------------------------
 
-ExternalProject_Add(
-    bfsupport
-    GIT_REPOSITORY      https://github.com/Bareflank/bfsupport.git
-    #GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    TMP_DIR             ${CMAKE_BINARY_DIR}/bfsupport/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsupport/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsupport/download
-    SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfsupport
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsupport/build
-    CONFIGURE_COMMAND   ""
-    BUILD_COMMAND       ""
-    INSTALL_COMMAND     ""
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+if(NOT WIN32 STREQUAL "1")
+
+    ExternalProject_Add(
+        bfsupport
+        GIT_REPOSITORY      https://github.com/Bareflank/bfsupport.git
+        #GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        TMP_DIR             ${CMAKE_BINARY_DIR}/bfsupport/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsupport/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsupport/download
+        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfsupport
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsupport/build
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Binutils
 # ------------------------------------------------------------------------------
 
 if(NOT WIN32 STREQUAL "1")
-    add_custom_target(binutils ALL VERBATIM COMMAND ${CMAKE_SOURCE_DIR}/scripts/create_linker.sh x86_64-vmm-elf ${CMAKE_INSTALL_PREFIX})
+
+    list(APPEND BINUTILS_ARGS
+        "--prefix=${CMAKE_BINARY_DIR}/binutils/prefix"
+        "--target=${BAREFLANK_TARGET}"
+        "--disable-nls"
+        "--disable-werror"
+        "--with-sysroot"
+    )
+
+    ExternalProject_Add(
+        binutils
+        TMP_DIR             ${CMAKE_BINARY_DIR}/binutils/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/binutils/stamp
+        SOURCE_DIR          ${CMAKE_BINARY_DIR}/binutils/src
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/binutils/build
+        URL                 "http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
+        URL_MD5             d5d270fd0b698ed59ca5ade8e1b5059c
+        CONFIGURE_COMMAND   ${CMAKE_BINARY_DIR}/binutils/src/configure "${BINUTILS_ARGS}"
+        BUILD_COMMAND       make
+        INSTALL_COMMAND     make install
+        LOG_DOWNLOAD        1
+        LOG_CONFIGURE       1
+        LOG_BUILD           1
+        LOG_INSTALL         1
+    )
+
+    ExternalProject_Add_Step(
+        binutils
+        prefix_install
+        COMMAND             ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/binutils/prefix/bin/ ${CMAKE_INSTALL_PREFIX}/bin/
+        DEPENDEES           install
+    )
+
 endif()
 
 # ------------------------------------------------------------------------------
@@ -314,7 +370,6 @@ if(NOT WIN32 STREQUAL "1")
     install(PROGRAMS scripts/bareflank_clang_tidy.sh DESTINATION bin)
     install(PROGRAMS scripts/bareflank_llvm_cov.sh DESTINATION bin)
     install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
-    install(PROGRAMS scripts/link_newlib.sh DESTINATION bin)
 
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++)
