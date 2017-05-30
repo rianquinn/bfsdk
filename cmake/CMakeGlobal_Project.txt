@@ -186,7 +186,7 @@ if(ENABLE_TIDY)
 endif()
 
 if(ENABLE_UNITTESTING)
-    include("${CMAKE_INSTALL_PREFIX}/cmake/CMakeOption_Testing.txt")
+    include("${CMAKE_CURRENT_LIST_DIR}/CMakeOption_Testing.txt")
     message("-- Unit Testing Enabled")
 endif()
 
