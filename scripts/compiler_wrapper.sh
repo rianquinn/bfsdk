@@ -34,17 +34,6 @@ VERSION_NAME=$(basename $0 | cut -d '-' -f 4)
 # Compiler
 # ------------------------------------------------------------------------------
 
-case $PROGRAM_NAME in
-
-*"clang")
-    C_COMPILER="true"
-    ;;
-
-*"clang++")
-    CXX_COMPILER="true"
-    ;;
-esac
-
 if [[ -z $VERSION_NAME ]]; then
     COMPILER=$PROGRAM_NAME
 else
@@ -68,6 +57,11 @@ do
 
     "-shared")
         export SHARED_LIBRARY="true"
+        ;;
+
+    "-x")
+        CXX_COMPILER="true"
+        i=$((i+1))
         ;;
 
     "-o")
@@ -215,6 +209,13 @@ do
         ;;
 
     "-Xclang")
+        COMPILE_ARGS[$COMPILE_ARGS_INDEX]="$ARG ${argArray[i+1]}"
+        COMPILE_ARGS_INDEX=$((COMPILE_ARGS_INDEX+1))
+        i=$((i+1))
+        continue
+        ;;
+
+    "-x")
         COMPILE_ARGS[$COMPILE_ARGS_INDEX]="$ARG ${argArray[i+1]}"
         COMPILE_ARGS_INDEX=$((COMPILE_ARGS_INDEX+1))
         i=$((i+1))
