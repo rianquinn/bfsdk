@@ -316,6 +316,15 @@ if(ENABLE_UNITTESTING)
 endif()
 
 # ------------------------------------------------------------------------------
+# Clean
+# ------------------------------------------------------------------------------
+
+add_custom_target(super-clean
+    COMMAND cmake --build . --target clean
+    COMMAND cmake --build ${CMAKE_BINARY_DIR}/astyle/build --target clean
+)
+
+# ------------------------------------------------------------------------------
 # Install
 # ------------------------------------------------------------------------------
 
@@ -372,11 +381,7 @@ if(NOT WIN32 STREQUAL "1")
     install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
 
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++)
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.8)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++-3.8)
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.9)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++-3.9)
     install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-4.0)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang++-4.0)
 endif()
