@@ -19,11 +19,11 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#include <hippomocks.h>
 #include <catch/catch.hpp>
 
 #include <bffile.h>
 #include <bfstring.h>
-#include <hippomocks.h>
 
 #include <memory>
 

@@ -1,6 +1,6 @@
 if(ENABLE_COVERAGE)
 
-    message("-- Testing Config: Coverage Tools")
+    message("-- Testing Config: Coverage Tools for GCC")
 
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -g")
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -O0")

@@ -108,7 +108,7 @@ matrix:
     env:
       - TEST="Astyle Format"
     script:
-      - cmake -DENABLE_FORMAT=ON ..
+      - cmake ..
       - make install
       - make format
       - |

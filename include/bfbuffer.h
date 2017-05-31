@@ -174,7 +174,8 @@ public:
     /// @expects none
     /// @ensures none
     ///
-    void release() noexcept
+    void
+    release() noexcept
     {
         m_size = 0;
         m_data.release();
@@ -187,7 +188,8 @@ public:
     ///
     /// @param other the other buffer to swap with
     ///
-    void swap(buffer &other) noexcept
+    void
+    swap(buffer &other) noexcept
     {
         std::swap(m_size, other.m_size);
         std::swap(m_data, other.m_data);

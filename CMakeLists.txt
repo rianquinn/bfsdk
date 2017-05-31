@@ -14,6 +14,20 @@ endif()
 include("cmake/CMakeGlobal_Project.txt")
 
 # ------------------------------------------------------------------------------
+# Source Directory
+# ------------------------------------------------------------------------------
+
+if(NOT BFSOURCE_DIR)
+    set(BFSOURCE_DIR "${CMAKE_INSTALL_PREFIX}/src")
+else()
+    if(NOT IS_ABSOLUTE ${BFSOURCE_DIR})
+        set(BFSOURCE_DIR "${CMAKE_BINARY_DIR}/${BFSOURCE_DIR}")
+    endif()
+endif()
+
+message("-- Source Directory: ${BFSOURCE_DIR}")
+
+# ------------------------------------------------------------------------------
 # JSON
 # ------------------------------------------------------------------------------
 
@@ -27,11 +41,12 @@ ExternalProject_Add(
     GIT_TAG             v1.2
     GIT_SHALLOW         1
     CMAKE_ARGS          ${JSON_CMAKE_ARGS}
-    TMP_DIR             ${CMAKE_BINARY_DIR}/bfsdk/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsdk/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsdk/download
-    SOURCE_DIR          ${CMAKE_BINARY_DIR}/bfsdk/src
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsdk/build
+    PREFIX              ${CMAKE_BINARY_DIR}/json/prefix
+    TMP_DIR             ${CMAKE_BINARY_DIR}/json/tmp
+    STAMP_DIR           ${CMAKE_BINARY_DIR}/json/stamp
+    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/json/download
+    SOURCE_DIR          ${BFSOURCE_DIR}/json
+    BINARY_DIR          ${CMAKE_BINARY_DIR}/json/build
     UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
 
@@ -49,10 +64,11 @@ ExternalProject_Add(
     GIT_TAG             v1.2
     GIT_SHALLOW         1
     CMAKE_ARGS          ${CATCH_CMAKE_ARGS}
+    PREFIX              ${CMAKE_BINARY_DIR}/catch/prefix
     TMP_DIR             ${CMAKE_BINARY_DIR}/catch/tmp
     STAMP_DIR           ${CMAKE_BINARY_DIR}/catch/stamp
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/catch/download
-    SOURCE_DIR          ${CMAKE_BINARY_DIR}/catch/src
+    SOURCE_DIR          ${BFSOURCE_DIR}/catch
     BINARY_DIR          ${CMAKE_BINARY_DIR}/catch/build
     UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
@@ -71,10 +87,11 @@ ExternalProject_Add(
     GIT_TAG             v1.2
     GIT_SHALLOW         1
     CMAKE_ARGS          ${HIPPOMOCKS_CMAKE_ARGS}
+    PREFIX              ${CMAKE_BINARY_DIR}/hippomocks/prefix
     TMP_DIR             ${CMAKE_BINARY_DIR}/hippomocks/tmp
     STAMP_DIR           ${CMAKE_BINARY_DIR}/hippomocks/stamp
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/hippomocks/download
-    SOURCE_DIR          ${CMAKE_BINARY_DIR}/hippomocks/src
+    SOURCE_DIR          ${BFSOURCE_DIR}/hippomocks
     BINARY_DIR          ${CMAKE_BINARY_DIR}/hippomocks/build
     UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
@@ -93,10 +110,11 @@ ExternalProject_Add(
     GIT_TAG             v1.2
     GIT_SHALLOW         1
     CMAKE_ARGS          ${GSL_CMAKE_ARGS}
+    PREFIX              ${CMAKE_BINARY_DIR}/gsl/prefix
     TMP_DIR             ${CMAKE_BINARY_DIR}/gsl/tmp
     STAMP_DIR           ${CMAKE_BINARY_DIR}/gsl/stamp
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/gsl/download
-    SOURCE_DIR          ${CMAKE_BINARY_DIR}/gsl/src
+    SOURCE_DIR          ${BFSOURCE_DIR}/gsl
     BINARY_DIR          ${CMAKE_BINARY_DIR}/gsl/build
     UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
@@ -115,10 +133,11 @@ ExternalProject_Add(
     GIT_TAG             v1.2
     GIT_SHALLOW         1
     CMAKE_ARGS          ${ASTYLE_CMAKE_ARGS}
+    PREFIX              ${CMAKE_BINARY_DIR}/astyle/prefix
     TMP_DIR             ${CMAKE_BINARY_DIR}/astyle/tmp
     STAMP_DIR           ${CMAKE_BINARY_DIR}/astyle/stamp
     DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/astyle/download
-    SOURCE_DIR          ${CMAKE_BINARY_DIR}/astyle/src
+    SOURCE_DIR          ${BFSOURCE_DIR}/astyle
     BINARY_DIR          ${CMAKE_BINARY_DIR}/astyle/build
     UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
 )
@@ -134,10 +153,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/newlib.git
         GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/newlib/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/newlib/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/newlib/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/newlib/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/newlib
+        SOURCE_DIR          ${BFSOURCE_DIR}/newlib
         BINARY_DIR          ${CMAKE_BINARY_DIR}/newlib/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -158,10 +178,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/llvm.git
         GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/llvm/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/llvm/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/llvm/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/llvm/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/llvm
+        SOURCE_DIR          ${BFSOURCE_DIR}/llvm
         BINARY_DIR          ${CMAKE_BINARY_DIR}/llvm/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -182,10 +203,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/libcxxabi.git
         GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/libcxxabi/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/libcxxabi/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxxabi/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxxabi/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxxabi
+        SOURCE_DIR          ${BFSOURCE_DIR}/libcxxabi
         BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxxabi/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -206,10 +228,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/libcxx.git
         GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/libcxx/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/libcxx/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/libcxx/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/libcxx/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/libcxx
+        SOURCE_DIR          ${BFSOURCE_DIR}/libcxx
         BINARY_DIR          ${CMAKE_BINARY_DIR}/libcxx/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -230,10 +253,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/bfunwind.git
         #GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/bfunwind/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/bfunwind/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/bfunwind/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfunwind/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfunwind
+        SOURCE_DIR          ${BFSOURCE_DIR}/bfunwind
         BINARY_DIR          ${CMAKE_BINARY_DIR}/bfunwind/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -254,10 +278,11 @@ if(NOT WIN32 STREQUAL "1")
         GIT_REPOSITORY      https://github.com/Bareflank/bfsupport.git
         #GIT_TAG             v1.2
         GIT_SHALLOW         1
+        PREFIX              ${CMAKE_BINARY_DIR}/bfsupport/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/bfsupport/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsupport/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsupport/download
-        SOURCE_DIR          ${CMAKE_INSTALL_PREFIX}/src/bfsupport
+        SOURCE_DIR          ${BFSOURCE_DIR}/bfsupport
         BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsupport/build
         CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
@@ -283,13 +308,15 @@ if(NOT WIN32 STREQUAL "1")
 
     ExternalProject_Add(
         binutils
-        TMP_DIR             ${CMAKE_BINARY_DIR}/binutils/tmp
-        STAMP_DIR           ${CMAKE_BINARY_DIR}/binutils/stamp
-        SOURCE_DIR          ${CMAKE_BINARY_DIR}/binutils/src
-        BINARY_DIR          ${CMAKE_BINARY_DIR}/binutils/build
         URL                 "http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
         URL_MD5             d5d270fd0b698ed59ca5ade8e1b5059c
-        CONFIGURE_COMMAND   ${CMAKE_BINARY_DIR}/binutils/src/configure "${BINUTILS_ARGS}"
+        PREFIX              ${CMAKE_BINARY_DIR}/binutils/prefix
+        TMP_DIR             ${CMAKE_BINARY_DIR}/binutils/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/binutils/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/binutils/download
+        SOURCE_DIR          ${BFSOURCE_DIR}/binutils
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/binutils/build
+        CONFIGURE_COMMAND   ${BFSOURCE_DIR}/binutils/configure "${BINUTILS_ARGS}"
         BUILD_COMMAND       make
         INSTALL_COMMAND     make install
         LOG_DOWNLOAD        1
@@ -322,6 +349,21 @@ endif()
 add_custom_target(super-clean
     COMMAND cmake --build . --target clean
     COMMAND cmake --build ${CMAKE_BINARY_DIR}/astyle/build --target clean
+)
+
+add_custom_target(dist-clean
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/astyle
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/bfsupport
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/bfunwind
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/binutils
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/catch
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/gsl
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/hippomocks
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/json
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/libcxx
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/libcxxabi
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/llvm
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${BFSOURCE_DIR}/newlib
 )
 
 # ------------------------------------------------------------------------------
@@ -374,14 +416,12 @@ install(FILES include/bfvmcallinterface.h DESTINATION include)
 
 install(FILES src/bfvmcall_intel_x64.asm DESTINATION src)
 
-if(NOT WIN32 STREQUAL "1")
-    install(PROGRAMS scripts/bareflank_astyle_format.sh DESTINATION bin)
-    install(PROGRAMS scripts/bareflank_clang_tidy.sh DESTINATION bin)
-    install(PROGRAMS scripts/bareflank_llvm_cov.sh DESTINATION bin)
-    install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
+install(PROGRAMS scripts/bareflank_astyle_format.sh DESTINATION bin)
+install(PROGRAMS scripts/bareflank_clang_tidy.sh DESTINATION bin)
+install(PROGRAMS scripts/bareflank_llvm_cov.sh DESTINATION bin)
+install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
 
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.8)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.9)
-    install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-4.0)
-endif()
+install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)
+install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.8)
+install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-3.9)
+install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang-4.0)
