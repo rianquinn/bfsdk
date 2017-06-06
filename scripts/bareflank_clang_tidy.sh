@@ -20,12 +20,28 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+# Arguments
+#
+# 1: all|diff If "all" is provided, all of the source will be examined, which
+#    can take a long time depending on how large the code base is. If "diff"
+#    is provide, only the files that have changed will be examined. It should
+#    be noted that if you only change a header, it is likely that the header
+#    will not be examined as it is not listed in the compilation database
+#
+# 1: To support out of tree builds, this script needs to be run from the
+#    build folder, and you must provide the source directory associated with
+#    the build folder.
+#
+# 2: Additional arguments for the "-checks=" flag for clang tidy. This can
+#    be used to disable specific checks that do not apply
+#
+
 # Note:
 #
 # To use this script, you need make sure you have a compilation database, and
 # clang tidy set up properly.
 #
-#   cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+#   cmake -DENABLE_TIDY=ON ..
 #
 # Once you have compiled Bareflank and created a compilation database,
 # you should be able to run this script which will tell you if there are
@@ -39,73 +55,19 @@
 #
 # - cert-err58-cpp: This is triggered by catch.hpp which we need
 #
+# - misc-noexcept-move-constructor: still buggy in LLVM 4.0
+#
 
-#
-# Output
-#
 OUTPUT=$PWD/.clang_tidy_results.txt
-
-CORES=$(grep -c ^processor /proc/cpuinfo)
-
-#
-# Make sure we can run this script
-#
-if [[ ! -f "compile_commands.json" ]]; then
-    echo "ERROR: database is missing. Did you run?"
-    echo "    - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
-    exit 1
-fi
-
-#
-# Ensure executable is in the PATH
-#
-if [[ ! -x "$(which run-clang-tidy-4.0.py)" ]]; then
-    echo "ERROR: run-clang-tidy-4.0.py not in PATH"
-    exit 1
-fi
-
-#
-# Cleanup
-#
-rm -Rf $OUTPUT
+NUM_CORES=$(grep -c ^processor /proc/cpuinfo)
 
 get_changed_files() {
-
-    working_files=$(git diff --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
-    indexed_files=$(git diff --cached --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
-    echo "$working_files" > tidy_files
-    echo "$indexed_files" >> tidy_files
-    duplicates=$(sort < tidy_files | uniq -d)
-    rm tidy_files
-
-    if [[ -n $duplicates ]]; then
-        echo "Stage changes for the following files, then rerun make tidy:"
-        for f in $duplicates; do
-            echo "    - $f"
-        done
-
-        exit
-    fi
-
-    files=$indexed_files
-
-    if [[ -z $files && $TEST == "Clang Tidy" ]]; then
-        files=$(git diff HEAD HEAD^ --name-only --diff-filter=ACM | grep -Ee "\.(cpp|h|c)" || true)
-    fi
+    pushd $1 > /dev/null
+    files=$(git diff --name-only --diff-filter=ACM HEAD^ | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+    popd > /dev/null
 }
 
-#
-# Run Clang Tidy
-#
-run_clang_tidy() {
-
-    run-clang-tidy-4.0.py \
-        -j $CORES \
-        -clang-tidy-binary clang-tidy-4.0 \
-        -header-filter=.* \
-        -checks=$1 \
-        files $files > $OUTPUT 2>&1
-
+verify_analysis() {
     if [[ -n $(grep "warning: " $OUTPUT) ]] || [[ -n $(grep "error: " $OUTPUT) ]]; then
         echo ""
         echo "############################"
@@ -115,35 +77,76 @@ run_clang_tidy() {
         grep --color -E '^|warning: |error: ' $OUTPUT
         exit -1;
     else
-        echo -e "\xE2\x9C\x93 passed: $1";
+        echo -e "\033[1;32m\xE2\x9C\x93 passed:\033[0m $1";
     fi
+}
+
+run_clang_tidy_all() {
+    run-clang-tidy-4.0.py \
+        -clang-tidy-binary clang-tidy-4.0 \
+        -header-filter="*.h" \
+        -j=$NUM_CORES \
+        -checks=$1 > $OUTPUT 2>&1
+}
+
+run_clang_tidy_diff() {
+    run-clang-tidy-4.0.py \
+        -clang-tidy-binary clang-tidy-4.0 \
+        -header-filter="*.h" \
+        -j=$NUM_CORES \
+        -checks=$1 \
+        files $files > $OUTPUT 2>&1
+}
+
+analyze() {
+    if [[ "$1" == "all" ]]; then
+        run_clang_tidy_all $2
+    else
+        run_clang_tidy_diff $2
+    fi
+
+    verify_analysis "$3"
 
     rm -Rf $OUTPUT
 }
 
-#
-# run_clang_tidy will be run on staged *.cpp and *.h files locally, and on all
-# changed files relative to the previous commit when run on travis ci.
-#
-get_changed_files
-
-if [[ -z $files ]]; then
-    echo -e "\033[1;32m\xe2\x9c\x93 clang-tidy passed: no .c/.cpp/.h changes to analyze\033[0m"
-    exit
+if [[ "$#" -lt 2 ]]; then
+    echo "ERROR: missing arguments"
+    exit 1
 fi
 
-echo "Files undergoing static analysis:"
-for f in $files; do
-    echo "  - $f"
-done
+if [[ ! -f "compile_commands.json" ]]; then
+    echo "ERROR: database is missing. Did you run?"
+    echo "    - cmake -DENABLE_TIDY=ON .."
+    exit 1
+fi
+
+if [[ ! -x "$(which run-clang-tidy-4.0.py)" ]]; then
+    echo "ERROR: run-clang-tidy-4.0.py not in PATH"
+    exit 1
+fi
+
+if [[ ! "$1" == "all" ]] && [[ ! "$1" == "diff" ]]; then
+    echo "ERROR: invalid opcode '$1'. Expecting 'all' or 'diff'"
+    exit 1
+fi
+
+if [[ "$1" == "diff" ]]; then
+    get_changed_files $2
+
+    echo "Files undergoing static analysis:"
+    for f in $files; do
+        echo "  - $f"
+    done
+fi
 
 #
 # Perform Checks
 #
-run_clang_tidy "clan*$1"
-run_clang_tidy "cert*,-clang-analyzer*,-cert-err58-cpp$1"
-run_clang_tidy "misc*,-clang-analyzer*,-misc-noexcept-move-constructor$1"
-run_clang_tidy "perf*,-clang-analyzer*$1"
-run_clang_tidy "cppc*,-clang-analyzer*,-cppcoreguidelines-pro-type-reinterpret-cast$1"
-run_clang_tidy "read*,-clang-analyzer*$1"
-run_clang_tidy "mode*,-clang-analyzer*$1"
+analyze $1 "clan*$3" "static analysis"
+analyze $1 "cert*,-clang-analyzer*,-cert-err58-cpp$3" "cert compliance"
+analyze $1 "misc*,-clang-analyzer*,-misc-noexcept-move-constructor$3" "misc checks"
+analyze $1 "perf*,-clang-analyzer*$3" "performance checks"
+analyze $1 "cppc*,-clang-analyzer*,-cppcoreguidelines-pro-type-reinterpret-cast$3" "c++ core guideline compliance"
+analyze $1 "read*,-clang-analyzer*$3" "readability checks"
+analyze $1 "mode*,-clang-analyzer*$3" "modernization checks"

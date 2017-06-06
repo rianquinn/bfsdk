@@ -24,17 +24,28 @@ OUTPUT=$PWD/.astyle_results.txt
 
 rm -f $OUTPUT
 
-if [[ "$#" == 1 ]]; then
-    cd $1
+if [[ "$#" -lt 1 ]]; then
+    echo "ERROR: missing arguments"
+    exit 1
 fi
 
-HEADERS=$(git ls-files "*.h" | tr '\n' ' ')
-CSOURCE=$(git ls-files "*.c" | tr '\n' ' ')
-CXXSOURCE=$(git ls-files "*.cpp" | tr '\n' ' ')
+if [[ "$#" == 2 ]]; then
+    cd $2
+fi
 
-FILES="$HEADERS $CSOURCE $CXXSOURCE"
+if [[ ! "$1" == "all" ]] && [[ ! "$1" == "diff" ]]; then
+    echo "ERROR: invalid opcode '$1'. Expecting 'all' or 'diff'"
+    exit 1
+fi
+
+if [[ "$1" == "all" ]]; then
+    FILES=$(git ls-files | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+else
+    FILES=$(git diff --name-only --diff-filter=ACM HEAD | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+fi
 
 if [[ -z "${FILES// }" ]]; then
+    echo -e "\033[1;32m\xe2\x9c\x93 no files to format. astyle passed\033[0m"
     exit 0
 fi
 
@@ -68,10 +79,12 @@ astyle \
 
 if [[ -z $(grep -s Formatted $OUTPUT) ]]; then
     echo -e "\033[1;32m\xe2\x9c\x93 astyle passed\033[0m"
+    rm -Rf $OUTPUT
     exit
 else
     echo -e "\xe2\x9c\x97 astyle failed: the following files were formatted:"
     grep -s Formatted $OUTPUT | awk '{print $2}'
     echo ""
+    rm -Rf $OUTPUT
     exit -1
 fi
