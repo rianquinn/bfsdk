@@ -28,10 +28,10 @@ build_script:
   #
   # Cygwin
   #
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build"'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; cmake -DENABLE_UNITTESTING=ON .."'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make install"'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build; make test"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build_cygwin"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; cmake -DENABLE_UNITTESTING=ON .."'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make install"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make test"'
 
   #
   # Visual Studio (MSBuild)
