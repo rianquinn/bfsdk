@@ -5,34 +5,34 @@ project(bfsdk C CXX)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(NOT WIN32 STREQUAL "1")
-        set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/bfprefix" CACHE PATH "default install path" FORCE)
+        set(CMAKE_INSTALL_PREFIX $ENV{HOME}/bfprefix CACHE PATH "" FORCE)
     else()
-        set(CMAKE_INSTALL_PREFIX "$ENV{HOMEPATH}/bfprefix" CACHE PATH "default install path" FORCE)
+        set(CMAKE_INSTALL_PREFIX $ENV{HOMEPATH}/bfprefix CACHE PATH "" FORCE)
     endif()
 endif()
 
-include("cmake/CMakeGlobal_Project.txt")
+include(cmake/CMakeGlobal_Project.txt)
 
 # ------------------------------------------------------------------------------
 # Source Directory
 # ------------------------------------------------------------------------------
 
 if(NOT BFSOURCE_DIR)
-    set(BFSOURCE_DIR "${CMAKE_INSTALL_PREFIX}/src")
+    set(BFSOURCE_DIR ${CMAKE_INSTALL_PREFIX}/src)
 else()
     if(NOT IS_ABSOLUTE ${BFSOURCE_DIR})
-        set(BFSOURCE_DIR "${CMAKE_BINARY_DIR}/${BFSOURCE_DIR}")
+        set(BFSOURCE_DIR ${CMAKE_BINARY_DIR}/${BFSOURCE_DIR})
     endif()
 endif()
 
-message("-- Source Directory: ${BFSOURCE_DIR}")
+message(STATUS "Source Directory: ${BFSOURCE_DIR}")
 
 # ------------------------------------------------------------------------------
 # JSON
 # ------------------------------------------------------------------------------
 
 list(APPEND JSON_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 ExternalProject_Add(
@@ -55,7 +55,7 @@ ExternalProject_Add(
 # ------------------------------------------------------------------------------
 
 list(APPEND CATCH_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 ExternalProject_Add(
@@ -78,7 +78,7 @@ ExternalProject_Add(
 # ------------------------------------------------------------------------------
 
 list(APPEND HIPPOMOCKS_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 ExternalProject_Add(
@@ -101,7 +101,7 @@ ExternalProject_Add(
 # ------------------------------------------------------------------------------
 
 list(APPEND GSL_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 ExternalProject_Add(
@@ -124,7 +124,7 @@ ExternalProject_Add(
 # ------------------------------------------------------------------------------
 
 list(APPEND ASTYLE_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 ExternalProject_Add(
@@ -299,16 +299,16 @@ endif()
 if(NOT WIN32 STREQUAL "1")
 
     list(APPEND BINUTILS_ARGS
-        "--prefix=${CMAKE_BINARY_DIR}/binutils/prefix"
-        "--target=${BAREFLANK_TARGET}"
-        "--disable-nls"
-        "--disable-werror"
-        "--with-sysroot"
+        --prefix=${CMAKE_BINARY_DIR}/binutils/prefix
+        --target=${BAREFLANK_TARGET}
+        --disable-nls
+        --disable-werror
+        --with-sysroot
     )
 
     ExternalProject_Add(
         binutils
-        URL                 "http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
+        URL                 http://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz
         URL_MD5             d5d270fd0b698ed59ca5ade8e1b5059c
         PREFIX              ${CMAKE_BINARY_DIR}/binutils/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/binutils/tmp
@@ -316,7 +316,7 @@ if(NOT WIN32 STREQUAL "1")
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/binutils/download
         SOURCE_DIR          ${BFSOURCE_DIR}/binutils
         BINARY_DIR          ${CMAKE_BINARY_DIR}/binutils/build
-        CONFIGURE_COMMAND   ${BFSOURCE_DIR}/binutils/configure "${BINUTILS_ARGS}"
+        CONFIGURE_COMMAND   ${BFSOURCE_DIR}/binutils/configure ${BINUTILS_ARGS}
         BUILD_COMMAND       make
         INSTALL_COMMAND     make install
         LOG_DOWNLOAD        1

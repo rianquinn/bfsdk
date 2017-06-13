@@ -1,42 +1,13 @@
 #
 # Configuration
 #
-
 language: cpp
-
 dist: trusty
-sudo: required
 
 #
-# Compilers
+# Build Dependencies
 #
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-3.8
-      - llvm-toolchain-trusty-3.9
-      - llvm-toolchain-trusty-4.0
-    packages:
-      - clang-3.8
-      - clang-3.9
-      - clang-4.0
-      - clang-tidy-4.0
-      - clang-format-4.0
-      - llvm-4.0
-      - gcc-6
-      - g++-6
-      - nasm
-      - doxygen
-
-#
-# Update Build Environment
-#
-# Currently GCC and CMake are out of date. We require:
-# - GCC 5+
-# - CMake 3.6+
-#
-before_install:
+before_script:
 
   #
   # Path
@@ -44,24 +15,26 @@ before_install:
   - export PATH="$HOME/bfprefix/bin:$PATH"
 
   #
-  # CMake
+  # Build Folder
   #
-  - wget https://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.sh
-  - chmod +x cmake-*-Linux-x86_64.sh
-  - sudo ./cmake-*-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license
-
-  #
-  # GCC
-  #
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 100
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 100
-
-#
-# Build Dependencies
-#
-before_script:
   - mkdir build
   - cd build
+
+  #
+  # Update / Install CMake
+  #
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      mkdir -p external/cmake
+      pushd external/cmake
+      wget https://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.sh
+      chmod +x cmake-*-Linux-x86_64.sh
+      ./cmake-*-Linux-x86_64.sh --exclude-subdir --skip-license
+      export PATH="${PWD}/bin:$PATH"
+      popd
+    else
+      if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
+    fi
 
 #
 # Build Matrix
@@ -73,6 +46,10 @@ matrix:
   # Doxygen
   #
   - os: linux
+    addons:
+      apt:
+        packages:
+          - doxygen
     env:
       - TEST="Doxygen"
     script:
@@ -105,10 +82,22 @@ matrix:
   # Astyle Format
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="Astyle Format"
     script:
-      - cmake ..
+      - |
+        cmake \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
+          ..
       - make install
       - make format
       - |
@@ -123,12 +112,24 @@ matrix:
   # Clang Tidy
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+        packages:
+          - clang-tidy-4.0
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="Clang Tidy"
     script:
       - |
         cmake \
           -DENABLE_TIDY=ON \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
           ..
       - make install
       - make tidy
@@ -137,12 +138,22 @@ matrix:
   # Codecov
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="Codecov"
     script:
       - |
         cmake \
           -DENABLE_COVERAGE=ON \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
           ..
       - make
       - make test
@@ -153,6 +164,17 @@ matrix:
   # LLVM SanitizerCoverage
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+        packages:
+          - clang-4.0
+          - llvm-4.0
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="LLVM SanitizerCoverage"
     script:
@@ -167,12 +189,22 @@ matrix:
   # Google Address Sanitizer
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="Google Address Sanitizer"
     script:
       - |
         cmake \
           -DENABLE_DYNAMIC_ASAN=ON \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
           ..
       - make
       - make test
@@ -181,26 +213,148 @@ matrix:
   # Google Undefined Sanitizer
   #
   - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-6
+          - g++-6
+          - nasm
     env:
       - TEST="Google Undefined Sanitizer"
     script:
       - |
         cmake \
           -DENABLE_DYNAMIC_USAN=ON \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
           ..
       - make
       - make test
 
   #
-  # Native Test
+  # G++ 5
   #
   - os: linux
     env:
-      - TEST="Native Test"
+      - TEST="G++ 5"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-5
+          - g++-5
+          - nasm
     script:
       - |
         cmake \
           -DENABLE_UNITTESTING=ON \
+          -DCMAKE_C_COMPILER="gcc-5" \
+          -DCMAKE_CXX_COMPILER="g++-5" \
           ..
-      - make install
+      - make
+      - make test
+
+  #
+  # G++ 6
+  #
+  - os: linux
+    env:
+      - TEST="G++ 6"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-6
+          - g++-6
+          - nasm
+    script:
+      - |
+        cmake \
+          -DENABLE_UNITTESTING=ON \
+          -DCMAKE_C_COMPILER="gcc-6" \
+          -DCMAKE_CXX_COMPILER="g++-6" \
+          ..
+      - make
+      - make test
+
+  #
+  # Clang 3.8
+  #
+  - os: linux
+    env:
+      - TEST="Clang 3.8"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+        packages:
+          - clang-3.8
+          - gcc-6
+          - g++-6
+          - nasm
+    script:
+      - |
+        cmake \
+          -DENABLE_UNITTESTING=ON \
+          -DCMAKE_C_COMPILER="clang-3.8" \
+          -DCMAKE_CXX_COMPILER="clang++-3.8" \
+          ..
+      - make
+      - make test
+
+  #
+  # Clang 3.9
+  #
+  - os: linux
+    env:
+      - TEST="Clang 3.9"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-3.9
+        packages:
+          - clang-3.9
+          - gcc-6
+          - g++-6
+          - nasm
+    script:
+      - |
+        cmake \
+          -DENABLE_UNITTESTING=ON \
+          -DCMAKE_C_COMPILER="clang-3.9" \
+          -DCMAKE_CXX_COMPILER="clang++-3.9" \
+          ..
+      - make
+      - make test
+
+  #
+  # Clang 4.0
+  #
+  - os: linux
+    env:
+      - TEST="Clang 4.0"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+        packages:
+          - clang-4.0
+          - gcc-6
+          - g++-6
+          - nasm
+    script:
+      - |
+        cmake \
+          -DENABLE_UNITTESTING=ON \
+          -DCMAKE_C_COMPILER="clang-4.0" \
+          -DCMAKE_CXX_COMPILER="clang++-4.0" \
+          ..
+      - make
       - make test

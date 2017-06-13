@@ -30,7 +30,7 @@ build_script:
   #
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER; mkdir build_cygwin"'
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; cmake -DENABLE_UNITTESTING=ON .."'
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make install"'
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make "'
   - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER/build_cygwin; make test"'
 
   #
@@ -41,5 +41,3 @@ build_script:
   - cmake -G "Visual Studio 15 2017 Win64" -DENABLE_UNITTESTING=ON ..
   - msbuild bfsdk.sln
   - ctest
-  - cmake --build . --target install
-  - cd ..

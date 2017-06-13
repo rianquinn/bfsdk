@@ -32,7 +32,7 @@ endif()
 macro(install_symlink filepath sympath)
     if(NOT WIN32 STREQUAL "1")
         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${filepath} ${sympath})")
-        install(CODE "message(\"-- Created symlink: ${sympath} -> ${filepath}\")")
+        install(CODE "message(STATUS \"Created symlink: ${sympath} -> ${filepath}\")")
     endif()
 endmacro(install_symlink)
 
@@ -40,7 +40,7 @@ endmacro(install_symlink)
 # Prefix
 # ------------------------------------------------------------------------------
 
-message("-- Install path: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Install path: ${CMAKE_INSTALL_PREFIX}")
 
 # ------------------------------------------------------------------------------
 # OS
@@ -54,7 +54,7 @@ else()
     set(OSTYPE "UNIX")
 endif()
 
-message("-- OS Type: ${OSTYPE}")
+message(STATUS "OS Type: ${OSTYPE}")
 
 # ------------------------------------------------------------------------------
 # ABI
@@ -66,7 +66,7 @@ else()
     set(ABITYPE "SYSV")
 endif()
 
-message("-- ABI Type: ${ABITYPE}")
+message(STATUS "ABI Type: ${ABITYPE}")
 
 # ------------------------------------------------------------------------------
 # Nasm Support
@@ -88,7 +88,7 @@ if(NOT WIN32 STREQUAL "1")
 
     enable_language(ASM_NASM)
 
-    set(CMAKE_ASM_NASM_FLAGS "-d ${ABITYPE} ")
+    set(CMAKE_ASM_NASM_FLAGS "-d ${ABITYPE}")
     set(CMAKE_ASM_NASM_CREATE_SHARED_LIBRARY TRUE)
     set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY TRUE)
 endif()
@@ -99,7 +99,7 @@ endif()
 
 if(CMAKE_TOOLCHAIN_FILE)
 
-    message("-- Cross Compiling Enabled")
+    message(STATUS "Cross Compiling Enabled")
 
     get_filename_component(CMAKE_C_COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
     get_filename_component(CMAKE_CXX_COMPILER_NAME ${CMAKE_CXX_COMPILER} NAME)
@@ -135,25 +135,25 @@ if(CMAKE_TOOLCHAIN_FILE)
     set(BAREFLANK_TARGET_ARCH ${CMAKE_C_COMPILER_ARCH})
     set(BAREFLANK_TARGET_OS ${CMAKE_C_COMPILER_OS})
 
-    set(BAREFLANK_TARGET "${BAREFLANK_TARGET_ARCH}-${BAREFLANK_TARGET_OS}-elf")
-    set(BAREFLANK_SYSROOT_PATH "${CMAKE_INSTALL_PREFIX}/sysroots/${BAREFLANK_TARGET}")
+    set(BAREFLANK_TARGET ${BAREFLANK_TARGET_ARCH}-${BAREFLANK_TARGET_OS}-elf)
+    set(BAREFLANK_SYSROOT_PATH ${CMAKE_INSTALL_PREFIX}/sysroots/${BAREFLANK_TARGET})
 
     find_program(CMAKE_AR ${BAREFLANK_TARGET_ARCH}-${BAREFLANK_TARGET_OS}-elf-ar)
 
-    message("-- Cross Compiler AR: ${CMAKE_AR}")
+    message(STATUS "Cross Compiler AR: ${CMAKE_AR}")
 
 else()
 
     set(BAREFLANK_TARGET_ARCH "x86_64")
     set(BAREFLANK_TARGET_OS "vmm")
 
-    set(BAREFLANK_TARGET "${BAREFLANK_TARGET_ARCH}-${BAREFLANK_TARGET_OS}-elf")
-    set(BAREFLANK_SYSROOT_PATH "${CMAKE_INSTALL_PREFIX}/sysroots/${BAREFLANK_TARGET}")
+    set(BAREFLANK_TARGET ${BAREFLANK_TARGET_ARCH}-${BAREFLANK_TARGET_OS}-elf)
+    set(BAREFLANK_SYSROOT_PATH ${CMAKE_INSTALL_PREFIX}/sysroots/${BAREFLANK_TARGET})
 
 endif()
 
-message("-- Cross Compiler Target: ${BAREFLANK_TARGET}")
-message("-- Cross Compiler Sysroot: ${BAREFLANK_SYSROOT_PATH}")
+message(STATUS "Cross Compiler Target: ${BAREFLANK_TARGET}")
+message(STATUS "Cross Compiler Sysroot: ${BAREFLANK_SYSROOT_PATH}")
 
 # ------------------------------------------------------------------------------
 # Testing
@@ -168,8 +168,8 @@ if(ENABLE_COVERAGE OR
 endif()
 
 if(ENABLE_UNITTESTING)
-    include("${CMAKE_CURRENT_LIST_DIR}/CMakeOption_Testing.txt")
-    message("-- Unit Testing Enabled")
+    include(${CMAKE_CURRENT_LIST_DIR}/CMakeOption_Testing.txt)
+    message(STATUS "Unit Testing Enabled")
 endif()
 
 if(ENABLE_TIDY)
@@ -181,15 +181,15 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(BAREFLANK_TOOLCHAIN_FLAGS)
-    message("-- Flags: ${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS}")
-    include("${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS}")
+    message(STATUS "Flags: ${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS}")
+    include(${CMAKE_CURRENT_LIST_DIR}/${BAREFLANK_TOOLCHAIN_FLAGS})
 else()
     if(WIN32 STREQUAL "1")
-        message("-- Flags: ${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_VS.txt")
-        include("${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_VS.txt")
+        message(STATUS "Flags: ${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_VS.txt")
+        include(${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_VS.txt)
     else()
-        message("-- Flags: ${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_GCC.txt")
-        include("${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_GCC.txt")
+        message(STATUS "Flags: ${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_GCC.txt")
+        include(${CMAKE_CURRENT_LIST_DIR}/CMakeFlags_Native_GCC.txt)
     endif()
 endif()
 
@@ -198,8 +198,8 @@ endif()
 # ------------------------------------------------------------------------------
 
 if(NOT WIN32 STREQUAL "1")
-    include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Tidy.txt")
-    include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Coverage.txt")
+    include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Tidy.txt)
+    include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Coverage.txt)
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Format.txt")
+include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Format.txt)

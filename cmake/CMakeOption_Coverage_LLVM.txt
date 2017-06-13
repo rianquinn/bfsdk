@@ -1,6 +1,6 @@
 if(ENABLE_COVERAGE_LLVM)
 
-    message("-- Testing Config: Coverage Tools for LLVM")
+    message(STATUS "Testing Config: Coverage Tools for LLVM")
 
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -g")
     set(COVERAGE_FLAGS "${COVERAGE_FLAGS} -O0")
