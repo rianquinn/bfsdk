@@ -2,12 +2,12 @@ message(STATUS "Code Formatting: Astyle")
 
 add_custom_target(
     format
-    COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_astyle_format.sh diff ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_astyle_format.sh diff ${CMAKE_SOURCE_DIR} ${TIDY_EXCEPTIONS}
     COMMENT "Running astyle format: ${PROJECT_NAME}"
 )
 
 add_custom_target(
     format-all
-    COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_astyle_format.sh all ${CMAKE_SOURCE_DIR}
+    COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_astyle_format.sh all ${CMAKE_SOURCE_DIR} ${TIDY_EXCEPTIONS}
     COMMENT "Running astyle format: ${PROJECT_NAME}"
 )
