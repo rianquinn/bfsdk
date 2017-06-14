@@ -1,6 +1,6 @@
 if(ENABLE_DYNAMIC_ASAN)
 
-    message("-- Testing Config: Dynamic Analysis")
+    message(STATUS "Testing Config: Dynamic Analysis")
 
     set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -g")
     set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -O1")

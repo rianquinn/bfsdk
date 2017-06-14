@@ -1,6 +1,6 @@
 if(ENABLE_DYNAMIC_USAN)
 
-    message("-- Testing Config: Dynamic Analysis")
+    message(STATUS "Testing Config: Dynamic Analysis")
 
     set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -fuse-ld=gold")
     set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -fsanitize=undefined")

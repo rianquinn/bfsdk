@@ -1,8 +1,8 @@
 list(APPEND INCLUDES
-    "."
-    "../include"
-    "../../include"
-    "../../../include"
+    .
+    ../include
+    ../../include
+    ../../../include
 )
 
 include_directories(${INCLUDES})
