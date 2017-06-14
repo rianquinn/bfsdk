@@ -26,6 +26,7 @@
 #ifndef BFSTRING_H
 #define BFSTRING_H
 
+#include <vector>
 #include <string>
 #include <sstream>
 #include <iomanip>

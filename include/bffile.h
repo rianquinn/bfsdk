@@ -33,8 +33,8 @@
 #include <fstream>
 
 #include <bfgsl.h>
+#include <bftypes.h>
 #include <bfbuffer.h>
-#include <bfpublish.h>
 #include <bfexception.h>
 
 /// File
@@ -69,7 +69,7 @@ public:
     /// @expects none
     /// @ensures none
     ///
-    PUBLISH ~file() noexcept = default;
+    VIRTUAL ~file() noexcept = default;
 
     /// Read
     ///
@@ -86,7 +86,7 @@ public:
     /// - since std::string has to initialize the backing array, reading in
     ///   a binary will always be faster. Thus, use read_binary if possible
     ///
-    PUBLISH text_data
+    VIRTUAL text_data
     read_text(const filename_type &filename) const
     {
         expects(!filename.empty());
@@ -124,7 +124,7 @@ public:
     /// optimization notes:
     /// - http://insanecoding.blogspot.it/2011/11/how-to-read-in-file-in-c.html
     ///
-    PUBLISH binary_data
+    VIRTUAL binary_data
     read_binary(const filename_type &filename) const
     {
         expects(!filename.empty());
@@ -160,7 +160,7 @@ public:
     /// @param filename name of the file to write to.
     /// @param buffer data to write
     ///
-    PUBLISH void
+    VIRTUAL void
     write_text(const filename_type &filename, const text_data &buffer) const
     {
         expects(!filename.empty());
@@ -185,7 +185,7 @@ public:
     /// @param filename name of the file to write to.
     /// @param buffer data to write
     ///
-    PUBLISH void
+    VIRTUAL void
     write_binary(const filename_type &filename, const binary_data &buffer) const
     {
         expects(!filename.empty());
@@ -207,7 +207,7 @@ public:
     /// @param filename the file name to extract the extension
     /// @return the filename's extension
     ///
-    PUBLISH extension_type
+    VIRTUAL extension_type
     extension(const filename_type &filename) const
     {
         if (filename.empty()) {
@@ -231,7 +231,7 @@ public:
     /// @param filename the file name to check
     /// @return true if the file exists, false otherwise
     ///
-    PUBLISH bool
+    VIRTUAL bool
     exists(const filename_type &filename) const
     {
         std::ifstream handle{filename};
@@ -246,7 +246,7 @@ public:
     /// @param filename to get the size of
     /// @return size of filename
     ///
-    PUBLISH filesize_type
+    VIRTUAL filesize_type
     size(const filename_type &filename) const
     {
         expects(!filename.empty());
@@ -278,7 +278,7 @@ public:
     /// @param paths list of paths to search for the provided list of files
     /// @return pull paths for each file located, throws otherwise
     ///
-    PUBLISH path_list_type
+    VIRTUAL path_list_type
     find_files(const path_list_type &files, const path_list_type &paths) const
     {
         expects(!files.empty());
@@ -316,7 +316,7 @@ public:
     ///
     /// @return returns home directory
     ///
-    PUBLISH std::string
+    VIRTUAL std::string
     home() const
     {
         char *home;

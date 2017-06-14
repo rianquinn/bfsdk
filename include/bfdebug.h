@@ -201,7 +201,9 @@ output_to_vcpu(V vcpuid, T func)
  * bffield(num)   // 10
  * @endcode
  */
-#define bffield(a) bfdebug << bfcolor_blue << #a << ": "                                           \
+#define bffield(a) bfdebug << bfcolor_blue << __BFFUNC__                                           \
+                           << bfcolor_yellow << #a                                                 \
+                           << bfcolor_blue << ": "                                                 \
                            << bfcolor_magenta << (a) << bfcolor_end << bfendl;
 
 #endif
