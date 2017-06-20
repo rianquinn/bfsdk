@@ -15,6 +15,11 @@ before_script:
   - export PATH="$HOME/bfprefix/bin:$PATH"
 
   #
+  # Output Errors
+  #
+  - export CTEST_OUTPUT_ON_FAILURE=1
+
+  #
   # Build Folder
   #
   - mkdir build
@@ -118,6 +123,7 @@ matrix:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-trusty-4.0
         packages:
+          - clang-4.0
           - clang-tidy-4.0
           - gcc-6
           - g++-6
@@ -291,7 +297,7 @@ matrix:
       apt:
         sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
+          - llvm-toolchain-trusty-3.8
         packages:
           - clang-3.8
           - gcc-6

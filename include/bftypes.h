@@ -62,6 +62,24 @@
 #endif
 
 /* -------------------------------------------------------------------------- */
+/* Testing                                                                    */
+/* -------------------------------------------------------------------------- */
+
+#ifdef ENABLE_UNITTESTING
+#define VIRTUAL virtual
+#else
+#define VIRTUAL
+#endif
+
+#ifdef ENABLE_UNITTESTING
+#define PRIVATE public
+#define PROTECTED public
+#else
+#define PRIVATE private
+#define PROTECTED protected
+#endif
+
+/* -------------------------------------------------------------------------- */
 /* Userspace                                                                  */
 /* -------------------------------------------------------------------------- */
 
