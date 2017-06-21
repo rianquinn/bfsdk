@@ -189,7 +189,7 @@ matrix:
           -DENABLE_COVERAGE_LLVM=ON \
           ..
       - make install
-      - make llvm_coverage
+      - make llvm-coverage
 
   #
   # Google Address Sanitizer
