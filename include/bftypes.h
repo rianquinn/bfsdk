@@ -71,12 +71,18 @@
 #define VIRTUAL
 #endif
 
+/*
+ * Note:
+ *
+ * We add ":" to the macro because doxygen get mad if you don't
+ */
+
 #ifdef ENABLE_UNITTESTING
-#define PRIVATE public
-#define PROTECTED public
+#define PRIVATE public:
+#define PROTECTED public:
 #else
-#define PRIVATE private
-#define PROTECTED protected
+#define PRIVATE private:
+#define PROTECTED protected:
 #endif
 
 /* -------------------------------------------------------------------------- */

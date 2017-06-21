@@ -3,8 +3,14 @@ if(ENABLE_COVERAGE_LLVM)
     message(STATUS "Code Coverage: LLVM")
 
     add_custom_target(
-        llvm_coverage
-        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_llvm_cov.sh
+        llvm-coverage
+        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_llvm_cov.sh all ${CMAKE_SOURCE_DIR}
+        COMMENT "Analyzing test coverage with LLVM for: ${PROJECT_NAME}"
+    )
+
+    add_custom_target(
+        llvm-coverage-test
+        COMMAND ${CMAKE_INSTALL_PREFIX}/bin/bareflank_llvm_cov.sh test
         COMMENT "Analyzing test coverage with LLVM for: ${PROJECT_NAME}"
     )
 

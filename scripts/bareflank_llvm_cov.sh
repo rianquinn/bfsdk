@@ -46,13 +46,14 @@ collect_test_stats() {
     llvm-cov-4.0 report $1 -instr-profile=default.profdata > stats.txt
     stats=$(awk 'flag{ if (/---/){printf "%s", buf; flag=0; buf=""} else buf = buf $0 ORS}; /---/{flag=1}' stats.txt)
     rm -Rf stats.txt
+    rm -Rf default.profdata
 
     while read -r line; do
 
         filename=$(awk '{print $1}' <<< $line)
 
         if [[ ! $filename == "/"* ]]; then
-            filename=$(readlink -f ../$filename)
+            filename=$(readlink -f $2/$filename)
         fi
 
         regions=$(awk '{print $3}' <<< $line)
@@ -99,11 +100,36 @@ collect_test_stats() {
 # Process Profile Data
 # ------------------------------------------------------------------------------
 
-if [[ "$#" == 0 ]]; then
+if [[ "$#" -lt 1 ]]; then
+    echo "ERROR: missing arguments"
+    exit 1
+fi
 
-    for f in $(find . -path "./*test/test_*"); do
+if [[ ! -x "$(which llvm-profdata-4.0)" ]]; then
+    echo "ERROR: llvm-profdata-4.0 not in PATH"
+    exit 1
+fi
+
+if [[ ! -x "$(which llvm-cov-4.0)" ]]; then
+    echo "ERROR: llvm-cov-4.0 not in PATH"
+    exit 1
+fi
+
+if [[ ! "$1" == "all" ]] && [[ ! "$1" == "test" ]]; then
+    echo "ERROR: invalid opcode '$1'. Expecting 'all' or 'diff'"
+    exit 1
+fi
+
+if [[ "$1" == "all" ]]; then
+
+    if [[ "$#" -lt 2 ]]; then
+        echo "ERROR: missing arguments"
+        exit 1
+    fi
+
+    for f in $(find . -path "./*tests/test_*"); do
         run_test $f
-        collect_test_stats $f
+        collect_test_stats $f $2
     done
 
     for i in "${!region_stats[@]}"
@@ -147,8 +173,13 @@ if [[ "$#" == 0 ]]; then
 
 else
 
-    run_test $1
-    llvm-cov-4.0 show $1 -instr-profile=default.profdata
-    llvm-cov-4.0 report $1 -instr-profile=default.profdata
+    if [[ ! -f $LLVM_COVERAGE_TEST ]]; then
+        echo "ERROR: LLVM_COVERAGE_TEST file not found: $LLVM_COVERAGE_TEST"
+        exit 1
+    fi
+
+    run_test $LLVM_COVERAGE_TEST
+    llvm-cov-4.0 show $LLVM_COVERAGE_TEST -instr-profile=default.profdata
+    llvm-cov-4.0 report $LLVM_COVERAGE_TEST -instr-profile=default.profdata
 
 fi
