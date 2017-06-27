@@ -411,6 +411,7 @@ install(FILES include/bfsupport.h DESTINATION include)
 install(FILES include/bfthreadcontext.h DESTINATION include)
 install(FILES include/bftypes.h DESTINATION include)
 install(FILES include/bfupperlower.h DESTINATION include)
+install(FILES include/bfvcpuid.h DESTINATION include)
 install(FILES include/bfvector.h DESTINATION include)
 install(FILES include/bfvmcallinterface.h DESTINATION include)
 

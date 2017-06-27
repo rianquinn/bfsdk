@@ -105,7 +105,7 @@ view_as_pointer(const T val)
  *
  * All std::cout and std::cerr are sent to a specific debug_ring
  * based on the vcpuid that you provide, instead of being
- * sent to vcpuid=0 and serial.
+ * sent to vcpuid=invalid and serial.
  *
  * @param vcpuid the vcpu to send the output to
  * @param func a lambda function containing the output to redirect
@@ -202,7 +202,7 @@ output_to_vcpu(V vcpuid, T func)
  * @endcode
  */
 #define bffield(a) bfdebug << bfcolor_blue << __BFFUNC__                                           \
-                           << bfcolor_yellow << #a                                                 \
+                           << bfcolor_yellow << " " << #a                                          \
                            << bfcolor_blue << ": "                                                 \
                            << bfcolor_magenta << (a) << bfcolor_end << bfendl;
 
