@@ -28,6 +28,9 @@
 
 #include <iostream>
 #include <exception>
+#include <typeinfo>
+#include <memory>
+#include <regex>
 
 #include <bftypes.h>
 #include <bferrorcodes.h>
@@ -57,16 +60,16 @@ guard_exceptions(int64_t error_code, T func)
     }
     catch (std::exception &e) {
         std::cout << '\n';
-        std::cerr << "----------------------------------------" << '\n';
-        std::cerr << "- Standard Exception Caught            -" << '\n';
-        std::cerr << "----------------------------------------" << '\n';
+        std::cerr << "================================================================================" << '\n';
+        std::cerr << typeid(e).name() << '\n';
+        std::cerr << "================================================================================" << '\n';
         std::cerr << e.what() << '\n';
     }
     catch (...) {
         std::cout << '\n';
-        std::cerr << "----------------------------------------" << '\n';
-        std::cerr << "- Unknown Exception Caught             -" << '\n';
-        std::cerr << "----------------------------------------" << '\n';
+        std::cerr << "================================================================================" << '\n';
+        std::cerr << "unknown exception" << '\n';
+        std::cerr << "================================================================================" << '\n';
     }
 
     return error_code;
