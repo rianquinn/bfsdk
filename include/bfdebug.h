@@ -147,8 +147,8 @@ output_to_vcpu(V vcpuid, T func)
 #endif
 
 /**
- * This macro is a shortcut for std::cout that adds some text and color.
- * Use it like std::cout
+ * This macro is a shortcut for std::cerr that adds some text and color.
+ * Use it like std::cerr
  *
  * @code
  * bfwarning << "hello world" << bfend;
@@ -159,8 +159,8 @@ output_to_vcpu(V vcpuid, T func)
 #endif
 
 /**
- * This macro is a shortcut for std::cout that adds some text and color.
- * Use it like std::cout
+ * This macro is a shortcut for std::cerr that adds some text and color.
+ * Use it like std::cerr
  *
  * @code
  * bferror << "hello world" << bfend;
@@ -171,8 +171,8 @@ output_to_vcpu(V vcpuid, T func)
 #endif
 
 /**
- * This macro is a shortcut for std::cout that adds some text and color.
- * Use it like std::cout
+ * This macro is a shortcut for std::cerr that adds some text and color.
+ * Use it like std::cerr
  *
  * @code
  * bffatal << "hello world" << bfend;
