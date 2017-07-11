@@ -27,6 +27,8 @@
 #ifndef BFDEBUG_H
 #define BFDEBUG_H
 
+#include <bfconstants.h>
+
 /* -------------------------------------------------------------------------- */
 /* C++ Debugging                                                              */
 /* -------------------------------------------------------------------------- */
@@ -92,9 +94,7 @@ template <
     >
 const void *
 view_as_pointer(const T val)
-{
-    return reinterpret_cast<const void *>(val);
-}
+{ return reinterpret_cast<const void *>(val); }
 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -110,7 +110,10 @@ view_as_pointer(const T val)
  * @param vcpuid the vcpu to send the output to
  * @param func a lambda function containing the output to redirect
  */
-template<class V, class T>
+template<
+    typename V,
+    typename T
+    >
 void
 output_to_vcpu(V vcpuid, T func)
 {
@@ -147,64 +150,522 @@ output_to_vcpu(V vcpuid, T func)
 #endif
 
 /**
- * This macro is a shortcut for std::cerr that adds some text and color.
- * Use it like std::cerr
+ * This macro is a shortcut for std::cout that adds some text and color.
+ * Use it like std::cout
  *
  * @code
  * bfwarning << "hello world" << bfend;
  * @endcode
  */
 #ifndef bfwarning
-#define bfwarning std::cerr << bfcolor_warning << "WARNING" << bfcolor_end << ": "
+#define bfwarning std::cout << bfcolor_warning << "WARNING" << bfcolor_end << ": "
 #endif
 
 /**
- * This macro is a shortcut for std::cerr that adds some text and color.
- * Use it like std::cerr
+ * This macro is a shortcut for std::cout that adds some text and color.
+ * Use it like std::cout
  *
  * @code
  * bferror << "hello world" << bfend;
  * @endcode
  */
 #ifndef bferror
-#define bferror std::cerr << bfcolor_error << "ERROR" << bfcolor_end << ": "
+#define bferror std::cout << bfcolor_error << "ERROR" << bfcolor_end << ": "
 #endif
 
 /**
- * This macro is a shortcut for std::cerr that adds some text and color.
- * Use it like std::cerr
+ * Print Line Number
+ *
+ * @note: this should only be used temporarily for debugging. Do not check code
+ *     with this macro into the main repo.
  *
  * @code
- * bffatal << "hello world" << bfend;
+ * bfline
  * @endcode
  */
-#ifndef bffatal
-#define bffatal std::cerr << bfcolor_error << "FATAL ERROR" << bfcolor_end << ": "
-#endif
+#define bfline bfdebug                                                                             \
+    << bfcolor_blue << __BFFUNC__<< " ["                                                           \
+    << bfcolor_yellow << __LINE__                                                                  \
+    << bfcolor_blue "]" << bfcolor_end << bfendl;
 
 /**
- * This macro is a shortcut for printing the current file and line
+ * Print Field Value
  *
- * @code
- * bfline;
- * @endcode
- */
-#define bfline bfdebug << bfcolor_blue << __BFFUNC__<< " ["                                        \
-                       << bfcolor_yellow << __LINE__                                               \
-                       << bfcolor_blue "]" << bfcolor_end << bfendl;
-
-/**
- * This macro prints the value of field
+ * @note: this should only be used temporarily for debugging. Do not check code
+ *     with this macro into the main repo.
  *
  * @code
  * int num = 10;
- * bffield(num)   // 10
+ * bffield(num)
  * @endcode
  */
-#define bffield(a) bfdebug << bfcolor_blue << __BFFUNC__                                           \
-                           << bfcolor_yellow << " " << #a                                          \
-                           << bfcolor_blue << ": "                                                 \
-                           << bfcolor_magenta << (a) << bfcolor_end << bfendl;
+#define bffield(a) bfdebug                                                                         \
+    << bfcolor_blue << __BFFUNC__                                                                  \
+    << bfcolor_yellow << " " << #a                                                                 \
+    << bfcolor_blue << ": "                                                                        \
+    << bfcolor_magenta << (a) << bfcolor_end << bfendl;
+
+/**
+ * Print Header
+ *
+ * @code
+ * bfdebug_header(0, "description")
+ * @endcode
+ */
+#define bfdebug_header(a,b)                                                                        \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bfdebug << std::string(b) << ": " << bfendl;                                               \
+    }
+
+/**
+ * Print Header
+ *
+ * @code
+ * bferror_header(0, "description")
+ * @endcode
+ */
+#define bferror_header(a,b)                                                                        \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bferror << std::string(b) << ": " << bfendl;                                               \
+    }
+
+/**
+ * Print New Line
+ *
+ * @code
+ * bfdebug_brline(0)
+ * @endcode
+ */
+#define bfdebug_brline(a) if ((a) <= DEBUG_LEVEL) bfdebug                                          \
+    << bfendl;
+
+/**
+ * Print New Line
+ *
+ * @code
+ * bferror_brline(0)
+ * @endcode
+ */
+#define bferror_brline(a) if ((a) <= DEBUG_LEVEL) bferror                                          \
+    << bfendl;
+
+/**
+ * Print Line Break (level 1)
+ *
+ * @code
+ * bfdebug_break(0)
+ * @endcode
+ */
+#define bfdebug_break1(a) if ((a) <= DEBUG_LEVEL) bfdebug                                          \
+    << "======================================================================\n";
+
+/**
+ * Print Line Break (level 2)
+ *
+ * @code
+ * bfdebug_break(0)
+ * @endcode
+ */
+#define bfdebug_break2(a) if ((a) <= DEBUG_LEVEL) bfdebug                                          \
+    << "----------------------------------------------------------------------\n";
+
+/**
+ * Print Line Break (level 3)
+ *
+ * @code
+ * bfdebug_break(0)
+ * @endcode
+ */
+#define bfdebug_break3(a) if ((a) <= DEBUG_LEVEL) bfdebug                                          \
+    << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n";
+
+/**
+ * Print Line Break (level 1)
+ *
+ * @code
+ * bferror_break(0)
+ * @endcode
+ */
+#define bferror_break1(a) if ((a) <= DEBUG_LEVEL) bferror                                          \
+    << "======================================================================\n";
+
+/**
+ * Print Line Break (level 2)
+ *
+ * @code
+ * bferror_break(0)
+ * @endcode
+ */
+#define bferror_break2(a) if ((a) <= DEBUG_LEVEL) bferror                                          \
+    << "----------------------------------------------------------------------\n";
+
+/**
+ * Print Line Break (level 3)
+ *
+ * @code
+ * bferror_break(0)
+ * @endcode
+ */
+#define bferror_break3(a) if ((a) <= DEBUG_LEVEL) bferror                                          \
+    << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n";
+
+/**
+ * Print Number Base 16
+ *
+ * @code
+ * bfdebug_nhex(0, "description", 42)
+ * @endcode
+ */
+#define bfdebug_nhex(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill('0') << std::internal << view_as_pointer(c);    \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Base 16 (Subfield)
+ *
+ * @code
+ * bfdebug_subnhex(0, "description", 42)
+ * @endcode
+ */
+#define bfdebug_subnhex(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill('0') << std::internal << view_as_pointer(c);    \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Based 10
+ *
+ * @code
+ * bfdebug_ndec(0, "description", 42)
+ * @endcode
+ */
+#define bfdebug_ndec(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::internal << std::dec << (c);       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Based 10 (Subfield)
+ *
+ * @code
+ * bfdebug_subndec(0, "description", 42)
+ * @endcode
+ */
+#define bfdebug_subndec(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::internal << std::dec << (c);       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Bool
+ *
+ * @code
+ * bfdebug_bool(0, "description", true)
+ * @endcode
+ */
+#define bfdebug_bool(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Bool (Subfield)
+ *
+ * @code
+ * bfdebug_subbool(0, "description", true)
+ * @endcode
+ */
+#define bfdebug_subbool(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print String
+ *
+ * @code
+ * bfdebug_text(0, "description", "value")
+ * @endcode
+ */
+#define bfdebug_text(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(40) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(30) << std::setfill(' ') << std::right << std::string(c);           \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print String (Subfield)
+ *
+ * @code
+ * bfdebug_subtext(0, "description", "value")
+ * @endcode
+ */
+#define bfdebug_subtext(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(36) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(30) << std::setfill(' ') << std::right << std::string(c);           \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Info
+ *
+ * @code
+ * bfdebug_info(0, "description")
+ * @endcode
+ */
+#define bfdebug_info(a,b)                                                                          \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bfdebug << std::string(b) << bfendl;                                                       \
+    }
+
+/**
+ * Print Info (Subfield)
+ *
+ * @code
+ * bfdebug_subinfo(0, "description")
+ * @endcode
+ */
+#define bfdebug_subinfo(a,b)                                                                       \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bfdebug << "  - " << std::string(b) << bfendl;                                             \
+    }
+
+/**
+ * Print Number Base 16
+ *
+ * @code
+ * bferror_nhex(0, "description", 42)
+ * @endcode
+ */
+#define bferror_nhex(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill('0') << std::internal << view_as_pointer(c);    \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Base 16 (Subfield)
+ *
+ * @code
+ * bferror_subnhex(0, "description", 42)
+ * @endcode
+ */
+#define bferror_subnhex(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill('0') << std::internal << view_as_pointer(c);    \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Based 10
+ *
+ * @code
+ * bferror_ndec(0, "description", 42)
+ * @endcode
+ */
+#define bferror_ndec(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::internal << std::dec << (c);       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Number Based 10 (Subfield)
+ *
+ * @code
+ * bferror_subndec(0, "description", 42)
+ * @endcode
+ */
+#define bferror_subndec(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::internal << std::dec << (c);       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Bool
+ *
+ * @code
+ * bferror_bool(0, "description", true)
+ * @endcode
+ */
+#define bferror_bool(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Bool (Subfield)
+ *
+ * @code
+ * bferror_subbool(0, "description", true)
+ * @endcode
+ */
+#define bferror_subbool(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print String
+ *
+ * @code
+ * bferror_text(0, "description", "value")
+ * @endcode
+ */
+#define bferror_text(a,b,c)                                                                        \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << std::setw(40) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(30) << std::setfill(' ') << std::right << std::string(c);           \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print String (Subfield)
+ *
+ * @code
+ * bferror_subtext(0, "description", "value")
+ * @endcode
+ */
+#define bferror_subtext(a,b,c)                                                                     \
+    if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(36) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << std::setw(30) << std::setfill(' ') << std::right << std::string(c);           \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Info
+ *
+ * @code
+ * bferror_info(0, "description")
+ * @endcode
+ */
+#define bferror_info(a,b)                                                                          \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bferror << std::string(b) << bfendl;                                                       \
+    }
+
+/**
+ * Print Info (Subfield)
+ *
+ * @code
+ * bferror_subinfo(0, "description")
+ * @endcode
+ */
+#define bferror_subinfo(a,b)                                                                       \
+    if ((a) <= DEBUG_LEVEL) {                                                                      \
+        bferror << "  - " << std::string(b) << bfendl;                                             \
+    }
+
+/**
+ * Print Pass
+ *
+ * @code
+ * bfdebug_pass(0, "description")
+ * @endcode
+ */
+#define bfdebug_pass(a,b)                                                                          \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(66) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << bfcolor_green << "pass" << bfcolor_end;                                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Pass (Subfield)
+ *
+ * @code
+ * bfdebug_subpass(0, "description")
+ * @endcode
+ */
+#define bfdebug_subpass(a,b)                                                                       \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(62) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << bfcolor_green << "pass" << bfcolor_end;                                       \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Fail
+ *
+ * @code
+ * bfdebug_fail(0, "description")
+ * @endcode
+ */
+#define bfdebug_fail(a,b)                                                                          \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << std::setw(66) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << bfcolor_red << "fail <----" << bfcolor_end;                                   \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Fail (Subfield)
+ *
+ * @code
+ * bfdebug_subfail(0, "description")
+ * @endcode
+ */
+#define bfdebug_subfail(a,b)                                                                       \
+    if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
+        std::cout << "  - ";                                                                       \
+        std::cout << std::setw(62) << std::setfill(' ') << std::left << std::string(b);            \
+        std::cout << bfcolor_red << "fail <----" << bfcolor_end;                                   \
+        std::cout << bfendl;                                                                       \
+    }
+
+/**
+ * Print Pass / Fail
+ *
+ * @code
+ * bfdebug_test(0, "description", true)
+ * @endcode
+ */
+#define bfdebug_test(a,b,c)                                                                        \
+    if ((c)) { bfdebug_pass(a,b); } else { bfdebug_fail(a,b); }
+
+/**
+ * Print Pass / Fail (Subfield)
+ *
+ * @code
+ * bfdebug_subtest(0, "description", true)
+ * @endcode
+ */
+#define bfdebug_subtest(a,b,c)                                                                     \
+    if ((c)) { bfdebug_subpass(a,b); } else { bfdebug_subfail(a,b); }
 
 #endif
 

@@ -265,13 +265,13 @@
 /*
  * Default Serial COM Port
  *
- * Possible values include:
- *    - 0x3F8U  // COM1
- *    - 0x2F8U  // COM2
- *    - 0x3E8U  // COM3
- *    - 0x2E8U  // COM4
- *    - 0xE000
- *    - 0xE010
+ * Possible values include (but not limited to):
+ *    - 0x03F8U  // COM1
+ *    - 0x02F8U  // COM2
+ *    - 0x03E8U  // COM3
+ *    - 0x02E8U  // COM4
+ *    - 0xE000U
+ *    - 0xE010U
  *
  * Note: See bfvmm/serial/serial_port_intel_x64.h
  */
@@ -316,14 +316,14 @@
 #endif
 
 /*
- * Secondary Enable If Verbosity
+ * Debug Level
  *
- * On VMWare, certain secondary controls are not needed
- * but we throw a warning so that people know there is
- * an issue. Use this to turn this warning off
+ * Defines how noisy Bareflank is. This defaults to 0 which only prints status
+ * information. Raise this level to include additional verbosity. Note that
+ * as you increase this level, performance will degrade.
  */
-#ifndef SECONDARY_ENABLE_IF_VERBOSE
-#define SECONDARY_ENABLE_IF_VERBOSE true
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL 1
 #endif
 
 #endif
