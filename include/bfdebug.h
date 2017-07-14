@@ -76,6 +76,16 @@
 #endif
 
 /**
+ * Bool To String
+ *
+ * @param val boolean
+ * @return string version of bool
+ */
+inline auto
+btos(bool val)
+{ return val ? "true" : "false"; }
+
+/**
  * View As Pointer
  *
  * This is really just a wrapper around reinterpret_cast to provide a simple
@@ -377,7 +387,7 @@ output_to_vcpu(V vcpuid, T func)
 #define bfdebug_bool(a,b,c)                                                                        \
     if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
         std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
-        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << btos(c);                  \
         std::cout << bfendl;                                                                       \
     }
 
@@ -392,7 +402,7 @@ output_to_vcpu(V vcpuid, T func)
     if ((a) <= DEBUG_LEVEL) { bfdebug;                                                             \
         std::cout << "  - ";                                                                       \
         std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
-        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << btos(c);                  \
         std::cout << bfendl;                                                                       \
     }
 
@@ -517,7 +527,7 @@ output_to_vcpu(V vcpuid, T func)
 #define bferror_bool(a,b,c)                                                                        \
     if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
         std::cout << std::setw(52) << std::setfill(' ') << std::left << std::string(b);            \
-        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << btos(c);                  \
         std::cout << bfendl;                                                                       \
     }
 
@@ -532,7 +542,7 @@ output_to_vcpu(V vcpuid, T func)
     if ((a) <= DEBUG_LEVEL) { bferror;                                                             \
         std::cout << "  - ";                                                                       \
         std::cout << std::setw(48) << std::setfill(' ') << std::left << std::string(b);            \
-        std::cout << std::setw(18) << std::setfill(' ') << std::right << #c;                       \
+        std::cout << std::setw(18) << std::setfill(' ') << std::right << btos(c);                  \
         std::cout << bfendl;                                                                       \
     }
 
