@@ -55,6 +55,11 @@
 #
 # - cert-err58-cpp: This is triggered by catch.hpp which we need
 #
+# - cert-err60-cpp: This is triggered by libc++ with std::runtime_error and
+#   std::logic_error. The only solution to this would be to provide custom
+#   exceptions which we might do in the future, but for now this is a bit
+#   pedantic.
+#
 # - misc-noexcept-move-constructor: still buggy in LLVM 4.0
 #
 
@@ -144,7 +149,7 @@ fi
 # Perform Checks
 #
 analyze $1 "clan*$3" "static analysis"
-analyze $1 "cert*,-clang-analyzer*,-cert-err58-cpp$3" "cert compliance"
+analyze $1 "cert*,-clang-analyzer*,-cert-err58-cpp,-cert-err60-cpp$3" "cert compliance"
 analyze $1 "misc*,-clang-analyzer*,-misc-noexcept-move-constructor$3" "misc checks"
 analyze $1 "perf*,-clang-analyzer*$3" "performance checks"
 analyze $1 "cppc*,-clang-analyzer*,-cppcoreguidelines-pro-type-reinterpret-cast$3" "c++ core guideline compliance"

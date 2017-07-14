@@ -54,47 +54,55 @@ ExternalProject_Add(
 # Catch
 # ------------------------------------------------------------------------------
 
-list(APPEND CATCH_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-)
+if(ENABLE_UNITTESTING)
 
-ExternalProject_Add(
-    catch
-    GIT_REPOSITORY      https://github.com/Bareflank/Catch.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    CMAKE_ARGS          ${CATCH_CMAKE_ARGS}
-    PREFIX              ${CMAKE_BINARY_DIR}/catch/prefix
-    TMP_DIR             ${CMAKE_BINARY_DIR}/catch/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/catch/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/catch/download
-    SOURCE_DIR          ${BFSOURCE_DIR}/catch
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/catch/build
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+    list(APPEND CATCH_CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    )
+
+    ExternalProject_Add(
+        catch
+        GIT_REPOSITORY      https://github.com/Bareflank/Catch.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        CMAKE_ARGS          ${CATCH_CMAKE_ARGS}
+        PREFIX              ${CMAKE_BINARY_DIR}/catch/prefix
+        TMP_DIR             ${CMAKE_BINARY_DIR}/catch/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/catch/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/catch/download
+        SOURCE_DIR          ${BFSOURCE_DIR}/catch
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/catch/build
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Hippomocks
 # ------------------------------------------------------------------------------
 
-list(APPEND HIPPOMOCKS_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-)
+if(ENABLE_UNITTESTING)
 
-ExternalProject_Add(
-    hippomocks
-    GIT_REPOSITORY      https://github.com/Bareflank/hippomocks.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    CMAKE_ARGS          ${HIPPOMOCKS_CMAKE_ARGS}
-    PREFIX              ${CMAKE_BINARY_DIR}/hippomocks/prefix
-    TMP_DIR             ${CMAKE_BINARY_DIR}/hippomocks/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/hippomocks/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/hippomocks/download
-    SOURCE_DIR          ${BFSOURCE_DIR}/hippomocks
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/hippomocks/build
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+    list(APPEND HIPPOMOCKS_CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    )
+
+    ExternalProject_Add(
+        hippomocks
+        GIT_REPOSITORY      https://github.com/Bareflank/hippomocks.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        CMAKE_ARGS          ${HIPPOMOCKS_CMAKE_ARGS}
+        PREFIX              ${CMAKE_BINARY_DIR}/hippomocks/prefix
+        TMP_DIR             ${CMAKE_BINARY_DIR}/hippomocks/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/hippomocks/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/hippomocks/download
+        SOURCE_DIR          ${BFSOURCE_DIR}/hippomocks
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/hippomocks/build
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # GSL
@@ -377,7 +385,6 @@ install(FILES cmake/CMakeGlobal_Includes.txt DESTINATION cmake)
 install(FILES cmake/CMakeGlobal_Project.txt DESTINATION cmake)
 install(FILES cmake/CMakeOption_ASan.txt DESTINATION cmake)
 install(FILES cmake/CMakeOption_Coverage.txt DESTINATION cmake)
-install(FILES cmake/CMakeOption_Coverage_LLVM.txt DESTINATION cmake)
 install(FILES cmake/CMakeOption_Testing.txt DESTINATION cmake)
 install(FILES cmake/CMakeOption_USan.txt DESTINATION cmake)
 install(FILES cmake/CMakeTarget_Coverage.txt DESTINATION cmake)
@@ -419,7 +426,6 @@ install(FILES src/bfvmcall_intel_x64.asm DESTINATION src)
 
 install(PROGRAMS scripts/bareflank_astyle_format.sh DESTINATION bin)
 install(PROGRAMS scripts/bareflank_clang_tidy.sh DESTINATION bin)
-install(PROGRAMS scripts/bareflank_llvm_cov.sh DESTINATION bin)
 install(PROGRAMS scripts/compiler_wrapper.sh DESTINATION bin)
 
 install_symlink(compiler_wrapper.sh ${CMAKE_INSTALL_PREFIX}/bin/x86_64-vmm-clang)

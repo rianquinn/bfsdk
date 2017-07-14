@@ -26,13 +26,11 @@
 #ifndef BFEXCEPTION_H
 #define BFEXCEPTION_H
 
-#include <iostream>
-#include <exception>
 #include <typeinfo>
-#include <memory>
-#include <regex>
+#include <exception>
 
 #include <bftypes.h>
+#include <bfdebug.h>
 #include <bferrorcodes.h>
 
 /// Guard Exceptions
@@ -59,17 +57,17 @@ guard_exceptions(int64_t error_code, T func)
         return BF_BAD_ALLOC;
     }
     catch (std::exception &e) {
-        std::cout << '\n';
-        std::cerr << "================================================================================" << '\n';
-        std::cerr << typeid(e).name() << '\n';
-        std::cerr << "================================================================================" << '\n';
-        std::cerr << e.what() << '\n';
+        bferror_brline(0);
+        bferror_break1(0);
+        bferror_info(0, typeid(e).name());
+        bferror_break1(0);
+        bferror_info(0, e.what());
     }
     catch (...) {
-        std::cout << '\n';
-        std::cerr << "================================================================================" << '\n';
-        std::cerr << "unknown exception" << '\n';
-        std::cerr << "================================================================================" << '\n';
+        bferror_brline(0);
+        bferror_break1(0);
+        bferror_info(0, "unknown exception");
+        bferror_break1(0);
     }
 
     return error_code;

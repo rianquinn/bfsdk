@@ -167,31 +167,6 @@ matrix:
       - bash <(curl -s https://codecov.io/bash)
 
   #
-  # LLVM SanitizerCoverage
-  #
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
-        packages:
-          - clang-4.0
-          - llvm-4.0
-          - gcc-6
-          - g++-6
-          - nasm
-    env:
-      - TEST="LLVM SanitizerCoverage"
-    script:
-      - |
-        cmake \
-          -DENABLE_COVERAGE_LLVM=ON \
-          ..
-      - make install
-      - make llvm-coverage
-
-  #
   # Google Address Sanitizer
   #
   - os: linux

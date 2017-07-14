@@ -25,7 +25,7 @@ sudo apt-get install git build-essential linux-headers-$(uname -r) nasm clang cm
 
 #### Windows (Cygwin):
 ```
-setup-x86_64.exe -q -P git,make,gcc-core,gcc-g++,nasm,clang,clang++,cmake,wget
+setup-x86_64.exe -q -P git,make,gcc-core,gcc-g++,nasm,clang,clang++,cmake
 ```
 
 #### Windows (Visual Studio):
@@ -37,8 +37,8 @@ Install the following packages:
   - Check "Desktop development with C++"
   - Check "C++ CLI / Support"
   - Check "Standard Library Modules"
-- [CMake v3.8 rc3 or higher](https://cmake.org/files/v3.8/cmake-3.8.0-rc3-win64-x64.msi)
-- [Git for Windows](https://github.com/git-for-windows/git/releases/download/v2.12.2.windows.1/Git-2.12.2-64-bit.exe)
+- [CMake v3.6 or higher](https://cmake.org/download/)
+- [Git for Windows](https://git-scm.com/download/win)
 
 ## Compilation / Testing / Installation
 
