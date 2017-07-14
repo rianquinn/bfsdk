@@ -323,7 +323,7 @@
  * as you increase this level, performance will degrade.
  */
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 1
+#define DEBUG_LEVEL 0
 #endif
 
 #endif
