@@ -52,6 +52,26 @@
  *      the virtual address of ".eh_frame" after relocation
  * @var section_info_t::eh_frame_size
  *      the size of ".eh_frame"
+ * @var section_info_t::debug_info_addr
+ *      the virtual address of ".debug_info" after relocation
+ * @var section_info_t::debug_info_size
+ *      the size of ".debug_info"
+ * @var section_info_t::debug_abbrev_addr
+ *      the virtual address of ".debug_abbrev" after relocation
+ * @var section_info_t::debug_abbrev_size
+ *      the size of ".debug_abbrev"
+ * @var section_info_t::debug_line_addr
+ *      the virtual address of ".debug_line" after relocation
+ * @var section_info_t::debug_line_size
+ *      the size of ".debug_line"
+ * @var section_info_t::debug_str_addr
+ *      the virtual address of ".debug_str" after relocation
+ * @var section_info_t::debug_str_size
+ *      the size of ".debug_str"
+ * @var section_info_t::debug_ranges_addr
+ *      the virtual address of ".debug_ranges" after relocation
+ * @var section_info_t::debug_ranges_size
+ *      the size of ".debug_ranges"
  */
 struct section_info_t {
     void *init_addr;
@@ -65,6 +85,21 @@ struct section_info_t {
 
     void *eh_frame_addr;
     uint64_t eh_frame_size;
+
+    void *debug_info_addr;
+    uint64_t debug_info_size;
+
+    void *debug_abbrev_addr;
+    uint64_t debug_abbrev_size;
+
+    void *debug_line_addr;
+    uint64_t debug_line_size;
+
+    void *debug_str_addr;
+    uint64_t debug_str_size;
+
+    void *debug_ranges_addr;
+    uint64_t debug_ranges_size;
 };
 
 /**
