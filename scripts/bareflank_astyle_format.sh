@@ -39,9 +39,9 @@ if [[ ! "$1" == "all" ]] && [[ ! "$1" == "diff" ]]; then
 fi
 
 if [[ "$1" == "all" ]]; then
-    FILES=$(git ls-files | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+    FILES=$(git ls-files | grep -Ee "\.(cpp|h|c)$" | awk -v dir="$PWD/" '{print dir $0}' || true)
 else
-    FILES=$(git diff --name-only --diff-filter=ACM HEAD | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+    FILES=$(git diff --name-only --diff-filter=ACM HEAD | grep -Ee "\.(cpp|h|c)$" | awk -v dir="$PWD/" '{print dir $0}' || true)
 fi
 
 if [[ -z "${FILES// }" ]]; then

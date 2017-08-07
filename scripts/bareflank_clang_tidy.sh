@@ -68,7 +68,7 @@ NUM_CORES=$(grep -c ^processor /proc/cpuinfo)
 
 get_changed_files() {
     pushd $1 > /dev/null
-    files=$(git diff --name-only --diff-filter=ACM HEAD^ | grep -Ee "\.(cpp|h|c)" | awk -v dir="$PWD/" '{print dir $0}' || true)
+    files=$(git diff --name-only --diff-filter=ACM HEAD^ | grep -Ee "\.(cpp|h|c)$" | awk -v dir="$PWD/" '{print dir $0}' || true)
     popd > /dev/null
 }
 
