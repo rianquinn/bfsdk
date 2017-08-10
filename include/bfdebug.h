@@ -59,13 +59,11 @@ using cstr_t = const char *;
 #define __BFFUNC__ static_cast<cstr_t>(__FUNCTION__)
 #endif
 
-#ifndef VMM
-#include <iostream>
-extern "C" inline uint64_t thread_context_cpuid(void) { return 0; }
-extern "C" inline uint64_t write_str(const std::string &str) { std::cout << str; return 0; }
-#else
+#ifdef VMM
 extern "C" uint64_t thread_context_cpuid(void);
 extern "C" uint64_t write_str(const std::string &str);
+#else
+#include <iostream>
 #endif
 
 #ifdef _MSC_VER
@@ -98,7 +96,11 @@ __bfdebug_core(gsl::not_null<std::string *> msg)
     *msg += bfcolor_cyan;
     *msg += "[";
     *msg += bfcolor_yellow;
+#ifdef VMM
     *msg += std::to_string(thread_context_cpuid());
+#else
+    *msg += '0';
+#endif
     *msg += bfcolor_cyan;
     *msg += "] ";
     *msg += bfcolor_end;
@@ -138,7 +140,12 @@ void __bfdebug_transaction(F func)
     std::string msg;
     msg.reserve(0x1000);
     func(&msg);
+
+#ifdef VMM
     write_str(msg);
+#else
+    std::cout << msg;
+#endif
 }
 
 template<typename F>
