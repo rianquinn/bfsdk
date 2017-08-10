@@ -44,7 +44,7 @@ using json = nlohmann::json;                ///< Simply namespace
 /// @param field the field name
 /// @return returns the converted number or throws
 ///
-template<
+template <
     typename T,
     typename J,
     typename = std::enable_if<std::is_integral<T>::value>
@@ -81,7 +81,7 @@ json_hex_or_dec(const J &obj, const std::string &field)
 /// @param field the field name
 /// @return returns std::vector with the converted numbers or throws
 ///
-template<
+template <
     typename T,
     typename J,
     typename = std::enable_if<std::is_integral<T>::value>

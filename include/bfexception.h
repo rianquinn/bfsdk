@@ -57,17 +57,21 @@ guard_exceptions(int64_t error_code, T func)
         return BF_BAD_ALLOC;
     }
     catch (std::exception &e) {
-        bferror_brline(0);
-        bferror_break1(0);
-        bferror_info(0, typeid(e).name());
-        bferror_break1(0);
-        bferror_info(0, e.what());
+        bfdebug_transaction(1, [&](std::string * msg) {
+            bferror_lnbr(0, msg);
+            bferror_brk1(0, msg);
+            bferror_info(0, typeid(e).name(), msg);
+            bferror_brk1(0, msg);
+            bferror_info(0, e.what(), msg);
+        });
     }
     catch (...) {
-        bferror_brline(0);
-        bferror_break1(0);
-        bferror_info(0, "unknown exception");
-        bferror_break1(0);
+        bfdebug_transaction(1, [&](std::string * msg) {
+            bferror_lnbr(0, msg);
+            bferror_brk1(0, msg);
+            bferror_info(0, "unknown exception", msg);
+            bferror_brk1(0, msg);
+        });
     }
 
     return error_code;
@@ -86,8 +90,6 @@ guard_exceptions(int64_t error_code, T func)
 template<class T>
 void
 guard_exceptions(T &&func)
-{
-    guard_exceptions(0L, std::forward<T>(func));
-}
+{ guard_exceptions(0L, std::forward<T>(func)); }
 
 #endif

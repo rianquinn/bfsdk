@@ -65,6 +65,16 @@ template <
 std::string
 to_string(const T val, const int base)
 {
+    // TODO:
+    //
+    // C++17 has a new set of functions that called to_chars which gets rid
+    // of the allocation. We should use this in the VMM when compiled with
+    // our cross compiler. When not compiled with our cross compiler, we
+    // should use this code to emulate it so that we do not need C++17 on all
+    // systems. This optimization would reduce the debugging code to just
+    // page allocations as needed which is ideal
+    //
+
     std::stringstream stream;
 
     switch (base) {
@@ -74,6 +84,7 @@ to_string(const T val, const int base)
 
         case 16:
             stream << "0x";
+            stream << std::setfill('0') << std::setw(16);
             break;
 
         default:

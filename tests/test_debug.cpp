@@ -20,36 +20,11 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <catch/catch.hpp>
-
-#include <gsl/gsl>
 #include <bfdebug.h>
-
-template<class T>
-void
-CHECK_COUT(const std::string &out, const std::string &err, T func)
-{
-    std::stringstream outbuf;
-    std::stringstream errbuf;
-    std::streambuf *outbuf_original = std::cout.rdbuf();
-    std::streambuf *errbuf_original = std::cerr.rdbuf();
-
-    auto _ = gsl::finally([&] {
-        std::cout.rdbuf(outbuf_original);
-        std::cerr.rdbuf(errbuf_original);
-
-        CHECK(outbuf.str() == out);
-        CHECK(errbuf.str() == err);
-    });
-
-    std::cout.rdbuf(outbuf.rdbuf());
-    std::cerr.rdbuf(errbuf.rdbuf());
-
-    func();
-}
 
 TEST_CASE("__BFFUNC__")
 {
-    bfdebug << __BFFUNC__ << '\n';
+    std::cout << __BFFUNC__ << '\n';
 }
 
 TEST_CASE("view_as_pointer: integer")
@@ -64,72 +39,18 @@ TEST_CASE("view_as_pointer: pointer")
     CHECK(view_as_pointer(&i) == reinterpret_cast<const void *>(&i));
 }
 
-TEST_CASE("output_to_vcpu: success")
-{
-    CHECK_COUT("$vcpuid=               0x1hello\n", "", [] {
-        output_to_vcpu(1, [] { std::cout << "hello\n"; });
-    });
-}
-
-TEST_CASE("output_to_vcpu: throw")
-{
-    auto caught = false;
-
-    try {
-        CHECK_COUT("$vcpuid=               0x1\n", "", [] {
-            output_to_vcpu(1, [] { throw std::runtime_error("error"); });
-        });
-    }
-    catch (...) {
-        caught = true;
-    }
-
-    CHECK(caught);
-}
-
-TEST_CASE("bfendl")
-{
-    CHECK_COUT("\n", "", [] {
-        std::cout << bfendl;
-    });
-}
-
-TEST_CASE("bfdebug")
-{
-    CHECK_COUT(bfcolor_debug "DEBUG" bfcolor_end ": hello\n", "", [] {
-        bfdebug << "hello\n";
-    });
-}
-
-TEST_CASE("bfwarning")
-{
-    CHECK_COUT(bfcolor_warning "WARNING" bfcolor_end ": hello\n", "", [] {
-        bfwarning << "hello\n";
-    });
-}
-
-TEST_CASE("bferror")
-{
-    CHECK_COUT(bfcolor_error "ERROR" bfcolor_end ": hello\n", "", [] {
-        bferror << "hello\n";
-    });
-}
-
-TEST_CASE("debug facilities")
-{
-    bfline;
-    bffield(10);
-}
-
 TEST_CASE("debug macros")
 {
-    bfdebug_header(0, "debug macro tests");
-    bfdebug_brline(0);
-    bfdebug_break1(0);
-    bfdebug_break2(0);
-    bfdebug_break3(0);
+    int i = 0;
+
+    bfdebug_lnbr(0);
+    bfdebug_brk1(0);
+    bfdebug_brk2(0);
+    bfdebug_brk3(0);
     bfdebug_nhex(0, "test", 42);
     bfdebug_subnhex(0, "test", 42);
+    bfdebug_nhex(0, "test", &i);
+    bfdebug_subnhex(0, "test", &i);
     bfdebug_ndec(0, "test", 42);
     bfdebug_subndec(0, "test", 42);
     bfdebug_bool(0, "test", true);
@@ -139,7 +60,6 @@ TEST_CASE("debug macros")
     bfdebug_text(0, "test", "value");
     bfdebug_subtext(0, "test", "value");
     bfdebug_info(0, "test");
-    bfdebug_subinfo(0, "test");
     bfdebug_pass(0, "test");
     bfdebug_subpass(0, "test");
     bfdebug_fail(0, "test");
@@ -152,11 +72,10 @@ TEST_CASE("debug macros")
 
 TEST_CASE("debug macros: no print")
 {
-    bfdebug_header(1000, "debug macro tests");
-    bfdebug_brline(1000);
-    bfdebug_break1(1000);
-    bfdebug_break2(1000);
-    bfdebug_break3(1000);
+    bfdebug_lnbr(1000);
+    bfdebug_brk1(1000);
+    bfdebug_brk2(1000);
+    bfdebug_brk3(1000);
     bfdebug_nhex(1000, "test", 42);
     bfdebug_subnhex(1000, "test", 42);
     bfdebug_ndec(1000, "test", 42);
@@ -168,7 +87,6 @@ TEST_CASE("debug macros: no print")
     bfdebug_text(1000, "test", "value");
     bfdebug_subtext(1000, "test", "value");
     bfdebug_info(1000, "test");
-    bfdebug_subinfo(1000, "test");
     bfdebug_pass(1000, "test");
     bfdebug_subpass(1000, "test");
     bfdebug_fail(1000, "test");
@@ -179,15 +97,76 @@ TEST_CASE("debug macros: no print")
     bfdebug_subtest(1000, "test", false);
 }
 
+TEST_CASE("alert macros")
+{
+    int i = 0;
+
+    bfalert_lnbr(0);
+    bfalert_brk1(0);
+    bfalert_brk2(0);
+    bfalert_brk3(0);
+    bfalert_nhex(0, "test", 42);
+    bfalert_subnhex(0, "test", 42);
+    bfalert_nhex(0, "test", &i);
+    bfalert_subnhex(0, "test", &i);
+    bfalert_ndec(0, "test", 42);
+    bfalert_subndec(0, "test", 42);
+    bfalert_bool(0, "test", true);
+    bfalert_subbool(0, "test", true);
+    bfalert_bool(0, "test", false);
+    bfalert_subbool(0, "test", false);
+    bfalert_text(0, "test", "value");
+    bfalert_subtext(0, "test", "value");
+    bfalert_info(0, "test");
+    bfalert_pass(0, "test");
+    bfalert_subpass(0, "test");
+    bfalert_fail(0, "test");
+    bfalert_subfail(0, "test");
+    bfalert_test(0, "test", true);
+    bfalert_subtest(0, "test", true);
+    bfalert_test(0, "test", false);
+    bfalert_subtest(0, "test", false);
+}
+
+TEST_CASE("alert macros: no print")
+{
+    bfalert_lnbr(1000);
+    bfalert_brk1(1000);
+    bfalert_brk2(1000);
+    bfalert_brk3(1000);
+    bfalert_nhex(1000, "test", 42);
+    bfalert_subnhex(1000, "test", 42);
+    bfalert_ndec(1000, "test", 42);
+    bfalert_subndec(1000, "test", 42);
+    bfalert_bool(1000, "test", true);
+    bfalert_subbool(1000, "test", true);
+    bfalert_bool(1000, "test", false);
+    bfalert_subbool(1000, "test", false);
+    bfalert_text(1000, "test", "value");
+    bfalert_subtext(1000, "test", "value");
+    bfalert_info(1000, "test");
+    bfalert_pass(1000, "test");
+    bfalert_subpass(1000, "test");
+    bfalert_fail(1000, "test");
+    bfalert_subfail(1000, "test");
+    bfalert_test(1000, "test", true);
+    bfalert_subtest(1000, "test", true);
+    bfalert_test(1000, "test", false);
+    bfalert_subtest(1000, "test", false);
+}
+
 TEST_CASE("error macros")
 {
-    bferror_header(0, "error macro tests");
-    bferror_brline(0);
-    bferror_break1(0);
-    bferror_break2(0);
-    bferror_break3(0);
+    int i = 0;
+
+    bferror_lnbr(0);
+    bferror_brk1(0);
+    bferror_brk2(0);
+    bferror_brk3(0);
     bferror_nhex(0, "test", 42);
     bferror_subnhex(0, "test", 42);
+    bferror_nhex(0, "test", &i);
+    bferror_subnhex(0, "test", &i);
     bferror_ndec(0, "test", 42);
     bferror_subndec(0, "test", 42);
     bferror_bool(0, "test", true);
@@ -197,16 +176,22 @@ TEST_CASE("error macros")
     bferror_text(0, "test", "value");
     bferror_subtext(0, "test", "value");
     bferror_info(0, "test");
-    bferror_subinfo(0, "test");
+    bferror_pass(0, "test");
+    bferror_subpass(0, "test");
+    bferror_fail(0, "test");
+    bferror_subfail(0, "test");
+    bferror_test(0, "test", true);
+    bferror_subtest(0, "test", true);
+    bferror_test(0, "test", false);
+    bferror_subtest(0, "test", false);
 }
 
 TEST_CASE("error macros: no print")
 {
-    bferror_header(1000, "error macro tests");
-    bferror_brline(1000);
-    bferror_break1(1000);
-    bferror_break2(1000);
-    bferror_break3(1000);
+    bferror_lnbr(1000);
+    bferror_brk1(1000);
+    bferror_brk2(1000);
+    bferror_brk3(1000);
     bferror_nhex(1000, "test", 42);
     bferror_subnhex(1000, "test", 42);
     bferror_ndec(1000, "test", 42);
@@ -218,5 +203,79 @@ TEST_CASE("error macros: no print")
     bferror_text(1000, "test", "value");
     bferror_subtext(1000, "test", "value");
     bferror_info(1000, "test");
-    bferror_subinfo(1000, "test");
+    bferror_pass(1000, "test");
+    bferror_subpass(1000, "test");
+    bferror_fail(1000, "test");
+    bferror_subfail(1000, "test");
+    bferror_test(1000, "test", true);
+    bferror_subtest(1000, "test", true);
+    bferror_test(1000, "test", false);
+    bferror_subtest(1000, "test", false);
+}
+
+TEST_CASE("null tests")
+{
+    bfdebug_nhex(0, nullptr, 42);
+    bfdebug_subnhex(0, nullptr, 42);
+    bfdebug_ndec(0, nullptr, 42);
+    bfdebug_subndec(0, nullptr, 42);
+    bfdebug_bool(0, nullptr, true);
+    bfdebug_subbool(0, nullptr, true);
+    bfdebug_bool(0, nullptr, false);
+    bfdebug_subbool(0, nullptr, false);
+    bfdebug_text(0, nullptr, nullptr);
+    bfdebug_subtext(0, nullptr, nullptr);
+    bfdebug_info(0, nullptr);
+    bfdebug_pass(0, nullptr);
+    bfdebug_subpass(0, nullptr);
+    bfdebug_fail(0, nullptr);
+    bfdebug_subfail(0, nullptr);
+    bfdebug_test(0, nullptr, true);
+    bfdebug_subtest(0, nullptr, true);
+    bfdebug_test(0, nullptr, false);
+    bfdebug_subtest(0, nullptr, false);
+}
+
+TEST_CASE("transaction")
+{
+    int i = 0;
+
+    bfdebug_transaction(0, [&](std::string * msg) {
+        bfdebug_lnbr(0, msg);
+        bfdebug_brk1(0, msg);
+        bfdebug_brk2(0, msg);
+        bfdebug_brk3(0, msg);
+        bfdebug_nhex(0, "test", 42, msg);
+        bfdebug_subnhex(0, "test", 42, msg);
+        bfdebug_nhex(0, "test", &i, msg);
+        bfdebug_subnhex(0, "test", &i, msg);
+        bfdebug_ndec(0, "test", 42, msg);
+        bfdebug_subndec(0, "test", 42, msg);
+        bfdebug_bool(0, "test", true, msg);
+        bfdebug_subbool(0, "test", true, msg);
+        bfdebug_bool(0, "test", false, msg);
+        bfdebug_subbool(0, "test", false, msg);
+        bfdebug_text(0, "test", "value", msg);
+        bfdebug_subtext(0, "test", "value", msg);
+        bfdebug_info(0, "test", msg);
+        bfdebug_pass(0, "test", msg);
+        bfdebug_subpass(0, "test", msg);
+        bfdebug_fail(0, "test", msg);
+        bfdebug_subfail(0, "test", msg);
+        bfdebug_test(0, "test", true, msg);
+        bfdebug_subtest(0, "test", true, msg);
+        bfdebug_test(0, "test", false, msg);
+        bfdebug_subtest(0, "test", false, msg);
+
+        for (auto j = 0; j < 0x1000; j++) {
+            bfdebug_info(0, "the cow is blue", msg);
+        }
+    });
+}
+
+TEST_CASE("debug facilities")
+{
+    bfline;
+    bffield(42);
+    bffield_hex(42);
 }
