@@ -46,17 +46,15 @@ namespace bfn
 ///
 template <
     typename T,
-    typename A,
-    typename I,
-    typename = std::enable_if<std::is_integral<I>::value>
+    typename A
     >
 auto
-find(std::vector<T, A> &v, const I index)
+find(std::vector<T, A> &v, const std::ptrdiff_t index)
 {
     // [[ensures ret: ret != v.end()]]
     expects(index >= 0 && index < gsl::narrow_cast<std::ptrdiff_t>(v.size()));
 
-    return v.begin() + gsl::narrow_cast<typename std::vector<T, A>::difference_type>(index);
+    return v.begin() + index;
 }
 
 /// Find (const)
@@ -73,17 +71,15 @@ find(std::vector<T, A> &v, const I index)
 ///
 template <
     typename T,
-    typename A,
-    typename I,
-    typename = std::enable_if<std::is_integral<I>::value>
+    typename A
     >
 auto
-cfind(const std::vector<T, A> &v, const I index)
+cfind(const std::vector<T, A> &v, const std::ptrdiff_t index)
 {
     // [[ensures ret: ret != v.end()]]
     expects(index >= 0 && index < gsl::narrow_cast<std::ptrdiff_t>(v.size()));
 
-    return v.cbegin() + gsl::narrow_cast<typename std::vector<T, A>::difference_type>(index);
+    return v.cbegin() + index;
 }
 
 /// Remove
