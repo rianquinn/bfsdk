@@ -209,7 +209,6 @@ endif()
 
 if(NOT WIN32 STREQUAL "1")
     include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Tidy.txt)
-    include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Coverage.txt)
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CMakeTarget_Format.txt)

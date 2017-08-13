@@ -38,6 +38,16 @@
 
 #include <type_traits>
 
+#ifdef _MSC_VER
+#define bfcolor_black ""
+#define bfcolor_red ""
+#define bfcolor_green ""
+#define bfcolor_yellow ""
+#define bfcolor_blue ""
+#define bfcolor_magenta ""
+#define bfcolor_cyan ""
+#define bfcolor_end ""
+#else
 #define bfcolor_black "\033[1;30m"
 #define bfcolor_red "\033[1;31m"
 #define bfcolor_green "\033[1;32m"
@@ -46,6 +56,7 @@
 #define bfcolor_magenta "\033[1;35m"
 #define bfcolor_cyan "\033[1;36m"
 #define bfcolor_end "\033[0m"
+#endif
 
 #define bfcolor_debug bfcolor_green
 #define bfcolor_alert bfcolor_yellow
