@@ -103,7 +103,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make install
+      - make install -j3
       - make format
       - |
         if [[ -n $(git diff) ]]; then
@@ -137,7 +137,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make install
+      - make install -j3
       - make tidy
 
   #
@@ -161,7 +161,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make
+      - make -j3
       - make test
       - cd ..
       - bash <(curl -s https://codecov.io/bash)
@@ -187,7 +187,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -211,7 +211,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -235,7 +235,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-5" \
           -DCMAKE_CXX_COMPILER="g++-5" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -259,7 +259,7 @@ matrix:
           -DCMAKE_C_COMPILER="gcc-6" \
           -DCMAKE_CXX_COMPILER="g++-6" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -285,7 +285,7 @@ matrix:
           -DCMAKE_C_COMPILER="clang-3.8" \
           -DCMAKE_CXX_COMPILER="clang++-3.8" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -311,7 +311,7 @@ matrix:
           -DCMAKE_C_COMPILER="clang-3.9" \
           -DCMAKE_CXX_COMPILER="clang++-3.9" \
           ..
-      - make
+      - make -j3
       - make test
 
   #
@@ -337,5 +337,5 @@ matrix:
           -DCMAKE_C_COMPILER="clang-4.0" \
           -DCMAKE_CXX_COMPILER="clang++-4.0" \
           ..
-      - make
+      - make -j3
       - make test

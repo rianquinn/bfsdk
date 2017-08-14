@@ -33,6 +33,7 @@ message(STATUS "Source Directory: ${BFSOURCE_DIR}")
 
 list(APPEND JSON_CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 )
 
 ExternalProject_Add(
@@ -58,6 +59,7 @@ if(ENABLE_UNITTESTING)
 
     list(APPEND CATCH_CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
 
     ExternalProject_Add(
@@ -85,6 +87,7 @@ if(ENABLE_UNITTESTING)
 
     list(APPEND HIPPOMOCKS_CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
 
     ExternalProject_Add(
@@ -110,6 +113,7 @@ endif()
 
 list(APPEND GSL_CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 )
 
 ExternalProject_Add(
@@ -131,30 +135,35 @@ ExternalProject_Add(
 # Astyle
 # ------------------------------------------------------------------------------
 
-list(APPEND ASTYLE_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-)
+if(ENABLE_ASTYLE)
 
-ExternalProject_Add(
-    astyle
-    GIT_REPOSITORY      https://github.com/Bareflank/astyle.git
-    GIT_TAG             v1.2
-    GIT_SHALLOW         1
-    CMAKE_ARGS          ${ASTYLE_CMAKE_ARGS}
-    PREFIX              ${CMAKE_BINARY_DIR}/astyle/prefix
-    TMP_DIR             ${CMAKE_BINARY_DIR}/astyle/tmp
-    STAMP_DIR           ${CMAKE_BINARY_DIR}/astyle/stamp
-    DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/astyle/download
-    SOURCE_DIR          ${BFSOURCE_DIR}/astyle
-    BINARY_DIR          ${CMAKE_BINARY_DIR}/astyle/build
-    UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
-)
+    list(APPEND ASTYLE_CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    )
+
+    ExternalProject_Add(
+        astyle
+        GIT_REPOSITORY      https://github.com/Bareflank/astyle.git
+        GIT_TAG             v1.2
+        GIT_SHALLOW         1
+        CMAKE_ARGS          ${ASTYLE_CMAKE_ARGS}
+        PREFIX              ${CMAKE_BINARY_DIR}/astyle/prefix
+        TMP_DIR             ${CMAKE_BINARY_DIR}/astyle/tmp
+        STAMP_DIR           ${CMAKE_BINARY_DIR}/astyle/stamp
+        DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/astyle/download
+        SOURCE_DIR          ${BFSOURCE_DIR}/astyle
+        BINARY_DIR          ${CMAKE_BINARY_DIR}/astyle/build
+        UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
+    )
+
+endif()
 
 # ------------------------------------------------------------------------------
 # Download Newlib
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(ENABLE_CROSS_COMPILATION)
 
     ExternalProject_Add(
         newlib
@@ -179,7 +188,7 @@ endif()
 # Download LLVM
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(ENABLE_CROSS_COMPILATION)
 
     ExternalProject_Add(
         llvm
@@ -204,7 +213,7 @@ endif()
 # Download Libcxxabi
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(ENABLE_CROSS_COMPILATION)
 
     ExternalProject_Add(
         libcxxabi
@@ -229,7 +238,7 @@ endif()
 # Download Libcxx
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(ENABLE_CROSS_COMPILATION)
 
     ExternalProject_Add(
         libcxx
@@ -254,24 +263,46 @@ endif()
 # Download Unwind
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(NOT BFUNWIND_PATH)
+    set(BFUNWIND_URL "https://github.com/bareflank/bfunwind.git" CACHE STRING "")
+    set(BFUNWIND_TAG "master" CACHE STRING "")
+    set(BFUNWIND_PATH ${CMAKE_SOURCE_DIR}/bfunwind CACHE PATH "")
+endif()
+
+if(ENABLE_CROSS_COMPILATION)
+
+    list(APPEND BFUNWIND_CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}
+        -DENABLE_TIDY=${ENABLE_TIDY}
+        -DENABLE_ASTYLE=${ENABLE_ASTYLE}
+    )
 
     ExternalProject_Add(
         bfunwind
-        GIT_REPOSITORY      https://github.com/Bareflank/bfunwind.git
-        #GIT_TAG             v1.2
+        GIT_REPOSITORY      ${BFUNWIND_URL}
+        GIT_TAG             ${BFUNWIND_TAG}
         GIT_SHALLOW         1
+        CMAKE_ARGS          ${BFUNWIND_CMAKE_ARGS}
         PREFIX              ${CMAKE_BINARY_DIR}/bfunwind/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/bfunwind/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/bfunwind/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfunwind/download
-        SOURCE_DIR          ${BFSOURCE_DIR}/bfunwind
+        SOURCE_DIR          ${BFUNWIND_PATH}
         BINARY_DIR          ${CMAKE_BINARY_DIR}/bfunwind/build
-        CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
         INSTALL_COMMAND     ""
         UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
     )
+
+    # if(ENABLE_TIDY)
+    #     add_custom_command(TARGET tidy COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfunwind/build --target tidy)
+    #     add_custom_command(TARGET tidy-all COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfunwind/build --target tidy-all)
+    # endif()
+
+    if(ENABLE_ASTYLE)
+        add_custom_command(TARGET format COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfunwind/build --target format)
+        add_custom_command(TARGET format-all COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfunwind/build --target format-all)
+    endif()
 
 endif()
 
@@ -279,24 +310,46 @@ endif()
 # Download Support
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(NOT BFSUPPORT_PATH)
+    set(BFSUPPORT_URL "https://github.com/bareflank/bfsupport.git" CACHE STRING "")
+    set(BFSUPPORT_TAG "master" CACHE STRING "")
+    set(BFSUPPORT_PATH ${CMAKE_SOURCE_DIR}/bfsupport CACHE PATH "")
+endif()
+
+if(ENABLE_CROSS_COMPILATION)
+
+    list(APPEND BFSUPPORT_CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}
+        -DENABLE_TIDY=${ENABLE_TIDY}
+        -DENABLE_ASTYLE=${ENABLE_ASTYLE}
+    )
 
     ExternalProject_Add(
         bfsupport
-        GIT_REPOSITORY      https://github.com/Bareflank/bfsupport.git
-        #GIT_TAG             v1.2
+        GIT_REPOSITORY      ${BFSUPPORT_URL}
+        GIT_TAG             ${BFSUPPORT_TAG}
         GIT_SHALLOW         1
+        CMAKE_ARGS          ${BFSUPPORT_CMAKE_ARGS}
         PREFIX              ${CMAKE_BINARY_DIR}/bfsupport/prefix
         TMP_DIR             ${CMAKE_BINARY_DIR}/bfsupport/tmp
         STAMP_DIR           ${CMAKE_BINARY_DIR}/bfsupport/stamp
         DOWNLOAD_DIR        ${CMAKE_BINARY_DIR}/bfsupport/download
-        SOURCE_DIR          ${BFSOURCE_DIR}/bfsupport
+        SOURCE_DIR          ${BFSUPPORT_PATH}
         BINARY_DIR          ${CMAKE_BINARY_DIR}/bfsupport/build
-        CONFIGURE_COMMAND   ""
         BUILD_COMMAND       ""
         INSTALL_COMMAND     ""
         UPDATE_DISCONNECTED ${UPDATE_DISCONNECTED}
     )
+
+    # if(ENABLE_TIDY)
+    #     add_custom_command(TARGET tidy COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfsupport/build --target tidy)
+    #     add_custom_command(TARGET tidy-all COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfsupport/build --target tidy-all)
+    # endif()
+
+    if(ENABLE_ASTYLE)
+        add_custom_command(TARGET format COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfsupport/build --target format)
+        add_custom_command(TARGET format-all COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/bfsupport/build --target format-all)
+    endif()
 
 endif()
 
@@ -304,7 +357,7 @@ endif()
 # Binutils
 # ------------------------------------------------------------------------------
 
-if(NOT WIN32 STREQUAL "1")
+if(ENABLE_CROSS_COMPILATION)
 
     list(APPEND BINUTILS_ARGS
         --prefix=${CMAKE_BINARY_DIR}/binutils/prefix
@@ -401,6 +454,7 @@ install(FILES include/bfconstants.h DESTINATION include)
 install(FILES include/bfdebug.h DESTINATION include)
 install(FILES include/bfdebugringinterface.h DESTINATION include)
 install(FILES include/bfdriverinterface.h DESTINATION include)
+install(FILES include/bfdwarf.h DESTINATION include)
 install(FILES include/bfehframelist.h DESTINATION include)
 install(FILES include/bferrorcodes.h DESTINATION include)
 install(FILES include/bfexception.h DESTINATION include)
